@@ -1,17 +1,13 @@
 %{
 #include <stdio.h>
-#include "symbol_table.h"
+#include "./src/utils/symbol_table.h"
+#include "./src/utils/tokens_list.h"
 #include "y.tab.h"
 
-#define MAX_SYMBOLS 1000
-
+int valid = 1;
 int column = 1;
-char* tokens[MAX_SYMBOLS];
-int num_tokens = 0;
 
-void insert_token();
-char* lookup_token(char* symbol);
-void print_tokens();
+void print_lexical_error();
 
 %}
 
@@ -86,11 +82,24 @@ null        { column += yyleng; return RETURN_NULL; }
 
 [\n]+   { column = 1; }
 
-.           { printf("Error: unexpected character %c\n", yytext[0]); }
+.       { print_lexical_error(); }
 
 %%
 
-int valid = 1;
+void print_lexical_error() {
+    char line[1024] = {0};
+    int i;
+
+    /* Concatenate current token with characters until end-of-line */
+    strcat(line, yytext);
+    while ((i = input()) != '\n' && i != EOF) {
+        line[strlen(line)] = i;
+    }
+    
+    printf("\nError: unexpected character %c, line %d, column %d\n", yytext[0], yylineno-1, column);
+    printf("Line: '''   %s   '''\n", line);
+    valid = 0;
+}
 
 void yyerror(char *msg){
     char line[1024] = {0};
@@ -102,41 +111,9 @@ void yyerror(char *msg){
         line[strlen(line)] = i;
     }
    
-    printf("\nError: %s, line %d, column %d\n", msg, yylineno, column);
+    printf("\nError: %s, line %d, column %d\n", msg, yylineno-1, column);
     printf("Line: '''   %s   '''\n", line);
     valid = 0;
-}
-
-void insert_token() {
-    char* new_token = yytext;
-    char* symbol = lookup_token(new_token);
-
-    if (symbol == NULL) {
-        if (num_tokens >= MAX_SYMBOLS) {
-            printf("Error: symbol table overflow\n");
-            return;
-        }
-        tokens[num_tokens] = new_token;
-        num_tokens++;
-    }    
-}
-
-char* lookup_token(char* symbol) {
-    int i;
-    for (i = 0; i < num_tokens; i++) {
-        if (strcmp(tokens[i], symbol) == 0) {
-            return tokens[i];
-        }
-    }
-    return NULL;
-}
-
-void print_tokens() {
-    int i;
-    printf("Tokens\n");
-    for (i = 0; i < num_tokens; i++) {
-        printf("%s\n", tokens[i]);
-    }
 }
 
 int main() {
@@ -152,7 +129,7 @@ int main() {
             //yylex();
             yyparse();
             if(valid){
-                printf("\nSatisfies the grammar \n");
+                printf("\nSatisfies the grammar\n");
                 print_table();
                 print_tokens();
             }

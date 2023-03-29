@@ -6,12 +6,11 @@ execute: parser
 parser: lex.yy.c y.tab.c
 	gcc lex.yy.c y.tab.c -o parser
 
-y.tab.c: parser.y
-	yacc -d parser.y
+y.tab.c: ./src/parser.y
+	yacc -d ./src/parser.y
 
-lex.yy.c: lex.l
-	lex lex.l
+lex.yy.c: ./src/lex.l
+	lex ./src/lex.l
 
-	
 clean:
 	rm -rf lex.yy.c y.tab.c y.tab.h ./parser 
