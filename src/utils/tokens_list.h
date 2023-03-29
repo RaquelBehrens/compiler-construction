@@ -3,25 +3,25 @@
 
 #define MAX_SYMBOLS 1000
 
+typedef struct {
+    yytokentype type;
+    char* word
+} token_t;
+
 char* tokens[MAX_SYMBOLS];
 int num_tokens = 0;
 
-char* lookup_token(char* symbol);
+//char* lookup_token(char* symbol);
 
-void insert_token(char* yytext) {
-    char* new_token = yytext;
-    char* symbol = lookup_token(new_token);
-
-    if (symbol == NULL) {
-        if (num_tokens >= MAX_SYMBOLS) {
-            printf("Error: symbol table overflow\n");
-            return;
-        }
-        tokens[num_tokens] = new_token;
-        num_tokens++;
-    }    
+void insert_token(token_t yytoken) {
+    if (num_tokens >= MAX_SYMBOLS) {
+        printf("Error: symbol table overflow\n");
+        return;
+    }
+    tokens[num_tokens] = new_token;
+    num_tokens++;
 }
-
+/*
 char* lookup_token(char* symbol) {
     int i;
     for (i = 0; i < num_tokens; i++) {
@@ -30,7 +30,7 @@ char* lookup_token(char* symbol) {
         }
     }
     return NULL;
-}
+}*/
 
 void print_tokens() {
     int i;

@@ -7,6 +7,7 @@
 int valid = 1;
 int column = 1;
 
+
 void print_lexical_error();
 
 %}
@@ -16,44 +17,276 @@ void print_lexical_error();
 
 %%
 
-def         { column += yyleng; return DEF; }
-if          { column += yyleng; return IF; }
-else        { column += yyleng; return ELSE; }
-for         { column += yyleng; return FOR; }
-break       { column += yyleng; return BREAK; }
-return      { column += yyleng; return RETURN; }
-new         { column += yyleng; return NEW; }
-read        { column += yyleng; return READ; }
-print       { column += yyleng; return PRINT; }
-int         { column += yyleng; return INT_KEYWORD; }
-float       { column += yyleng; return FLOAT_KEYWORD; }
-string      { column += yyleng; return STRING_KEYWORD; }
-null        { column += yyleng; return RETURN_NULL; }
+def         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return DEF; }
 
-\{          { column += yyleng; return LBRACKETS; }
-\}          { column += yyleng; return RBRACKETS; }
-\(          { column += yyleng; return LPAREN; }
-\)          { column += yyleng; return RPAREN; }
-\[          { column += yyleng; return LSQRBRACKETS; }
-\]          { column += yyleng; return RSQRBRACKETS; }
+if          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return IF; }
+else        { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return ELSE; }
+for         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return FOR; }
+break       { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return BREAK; }
+return      { 
+             char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return RETURN; }
+new         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return NEW; }
+read        { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return READ; }
+print       { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return PRINT; }
+int         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return INT_KEYWORD; }
+float       { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return FLOAT_KEYWORD; }
+string      { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return STRING_KEYWORD; }
+null        { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return RETURN_NULL; }
 
-\;          { column += yyleng; return SEMICOLON; }
-\,          { column += yyleng; return COMMA; }
+\{          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return LBRACKETS; }
+\}          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return RBRACKETS; }
+\(          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return LPAREN; }
+\)          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return RPAREN; }
+\[          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return LSQRBRACKETS; }
+\]          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return RSQRBRACKETS; }
+
+\;          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return SEMICOLON; }
+\,          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return COMMA; }
  
-\+          { column += yyleng; return PLUS; }
-\-          { column += yyleng; return MINUS; }
-\*          { column += yyleng; return TIMES; }
-\/          { column += yyleng; return DIVIDE; }
-\%          { column += yyleng; return MOD; }
+\+          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return PLUS; }
+\-          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return MINUS; }
+\*          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return TIMES; }
+\/          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return DIVIDE; }
+\%          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return MOD; }
 
-\=          { column += yyleng; return ASSIGN; }
+\=          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return ASSIGN; }
 
-\==         { column += yyleng; return EQ; }
-\!=         { column += yyleng; return NEQ; }
-\>          { column += yyleng; return GT; }
-\<          { column += yyleng; return LT; }
-\>=         { column += yyleng; return GE; }
-\<=         { column += yyleng; return LE; }
+\==         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return EQ; }
+\!=         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return NEQ; }
+\>          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return GT; }
+\<          { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return LT; }
+\>=         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return GE; }
+\<=         { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return LE; }
 
 [a-zA-Z_][a-zA-Z0-9_]*  { 
     symbol_t* symbol = lookup_symbol(yytext);
@@ -64,6 +297,11 @@ null        { column += yyleng; return RETURN_NULL; }
     } else {
         symbol->usage_count += 1;
     }
+    char* symbol = yytext;
+    struct token_t token;
+    token.type = DEF;
+    token.word = symbol;
+    insert_token(tok);
     // Set yylval to point to the symbol table entry
     //yyval.symbol = symbol;
     yylval.address = number_of_symbols()+1;
@@ -72,9 +310,28 @@ null        { column += yyleng; return RETURN_NULL; }
     column += yyleng;     
     return IDENT; }
 
-[0-9]+      { column += yyleng; return INT_CONSTANT; }
-[0-9]+\.[0-9]+      { column += yyleng; return FLOAT_CONSTANT; }
-\"([^\\\"]|\\.)*\"  { column += yyleng; return STRING_CONSTANT; }
+[0-9]+      { 
+              char* symbol = yytext;
+              struct token_t token;
+              token.type = DEF;
+              token.word = symbol;
+              insert_token(tok);
+              column += yyleng;
+              return INT_CONSTANT; }
+[0-9]+\.[0-9]+ { char* symbol = yytext;
+                 struct token_t token;
+                 token.type = DEF;
+                 token.word = symbol;
+                 insert_token(tok);
+                 column += yyleng;
+                 return FLOAT_CONSTANT; }
+\"([^\\\"]|\\.)*\"  { char* symbol = yytext;
+                      struct token_t token;
+                      token.type = DEF;
+                      token.word = symbol;
+                      insert_token(tok);
+                      column += yyleng;
+                      return STRING_CONSTANT; }
 
 [\t\r]+  { /* ignore whitespace */ }
 
