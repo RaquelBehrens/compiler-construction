@@ -1,0 +1,106 @@
+def perimetro(int a, int b, int c) {
+    int perimetro;
+    perimetro = a + b + c;
+    print "Perímetro é ";
+    print perimetro;
+
+    return;
+}
+
+def area(int a, int b, int c) {
+    int area;
+    area = a + b;
+    area = area * c;
+    area = area / 2;
+    print "Área é ";
+    print area;
+
+    return;
+}
+
+def quadrado(int n) {
+    float quadrado;
+    quadrado = n * (1/2);
+
+    print("A raiz quadrada de");
+    print(n);
+    print("é");
+    print(result);
+
+    return;
+}
+
+def contar(int numero, int conta, int ultimo) {
+    if (numero == 0) {
+        return;
+    }
+
+    float x;
+
+    if (conta >= 100) {
+        x = numero / conta;
+    } else {
+        x = (numero % ultimo) / conta;
+    }
+    return;
+}
+
+def checar_multiplos(int a, int b) {
+    if (b % a == 0) {
+        print "São múltiplos";
+    } else {
+        if (a % b == 0) {
+            print "São múltiplos";
+        } else {
+            print "Não são múltiplos";
+        }
+    }
+}
+
+def checar(string a, string b, string c) {
+    if (a == "vertebrado") {
+        if (b == "ave") {
+            if (c == "carnivoro") {
+                print "águia";
+            }
+        }
+    }
+    
+    return;
+}
+
+def main() {
+    int a;
+    a = 1;
+
+    int b;
+    b = 2;
+
+    int c;
+    c = 3;
+
+    int retorno;
+
+    retorno = perimetro(a, b, c);
+    retorno = area(a, b, c);
+    retorno = quadrado(a);
+    retorno = quadrado(b);
+    retorno = quadrado(c);
+    retorno = contar(a, b, c);
+    retorno = checar_multiplos(a, b);
+    retorno = checar_multiplos(a, c);
+    retorno = checar_multiplos(b, c);
+
+    string d;
+    d = "vertebrado";
+
+    string e;
+    e = "carnivoro";
+    
+    string f;
+    f = "ave";
+
+    retorno = checar(d, e, f);
+
+}
+
