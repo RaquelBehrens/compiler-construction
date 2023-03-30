@@ -8,7 +8,6 @@
 int valid = 1;
 int column = 1;
 
-
 void print_lexical_error();
 
 %}
@@ -18,271 +17,108 @@ void print_lexical_error();
 
 %%
 
-def         { 
-              
-              insert_token(DEF, yytext);
+def         { insert_token(DEF, yytext);
               column += yyleng;
               return DEF; }
-
-if          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+if          { insert_token(DEF, yytext);
               column += yyleng;
               return IF; }
-else        { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+else        { insert_token(DEF, yytext);
               column += yyleng;
               return ELSE; }
-for         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+for         { insert_token(DEF, yytext);
               column += yyleng;
               return FOR; }
-break       { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+break       { insert_token(DEF, yytext);
               column += yyleng;
               return BREAK; }
-return      { 
-             
-              
-              
-              
-              insert_token(DEF, yytext);
+return      { insert_token(DEF, yytext);
               column += yyleng;
               return RETURN; }
-new         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+new         { insert_token(DEF, yytext);
               column += yyleng;
               return NEW; }
-read        { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+read        { insert_token(DEF, yytext);
               column += yyleng;
               return READ; }
-print       { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+print       { insert_token(DEF, yytext);
               column += yyleng;
               return PRINT; }
-int         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+int         { insert_token(DEF, yytext);
               column += yyleng;
               return INT_KEYWORD; }
-float       { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+float       { insert_token(DEF, yytext);
               column += yyleng;
               return FLOAT_KEYWORD; }
-string      { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+string      { insert_token(DEF, yytext);
               column += yyleng;
               return STRING_KEYWORD; }
-null        { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+null        { insert_token(DEF, yytext);
               column += yyleng;
               return RETURN_NULL; }
 
-\{          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\{          { insert_token(DEF, yytext);
               column += yyleng;
               return LBRACKETS; }
-\}          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\}          { insert_token(DEF, yytext);
               column += yyleng;
               return RBRACKETS; }
-\(          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\(          { insert_token(DEF, yytext);
               column += yyleng;
               return LPAREN; }
-\)          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\)          { insert_token(DEF, yytext);
               column += yyleng;
               return RPAREN; }
-\[          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\[          { insert_token(DEF, yytext);
               column += yyleng;
               return LSQRBRACKETS; }
-\]          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\]          { insert_token(DEF, yytext);
               column += yyleng;
               return RSQRBRACKETS; }
 
-\;          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\;          { insert_token(DEF, yytext);
               column += yyleng;
               return SEMICOLON; }
-\,          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\,          { insert_token(DEF, yytext);
               column += yyleng;
               return COMMA; }
  
-\+          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\+          { insert_token(DEF, yytext);
               column += yyleng;
               return PLUS; }
-\-          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\-          { insert_token(DEF, yytext);
               column += yyleng;
               return MINUS; }
-\*          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\*          { insert_token(DEF, yytext);
               column += yyleng;
               return TIMES; }
-\/          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\/          { insert_token(DEF, yytext);
               column += yyleng;
               return DIVIDE; }
-\%          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\%          { insert_token(DEF, yytext);
               column += yyleng;
               return MOD; }
 
-\=          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\=          { insert_token(DEF, yytext);
               column += yyleng;
               return ASSIGN; }
 
-\==         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\==         { insert_token(DEF, yytext);
               column += yyleng;
               return EQ; }
-\!=         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\!=         { insert_token(DEF, yytext);
               column += yyleng;
               return NEQ; }
-\>          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\>          { insert_token(DEF, yytext);
               column += yyleng;
               return GT; }
-\<          { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\<          { insert_token(DEF, yytext);
               column += yyleng;
               return LT; }
-\>=         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\>=         { insert_token(DEF, yytext);
               column += yyleng;
               return GE; }
-\<=         { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+\<=         { insert_token(DEF, yytext);
               column += yyleng;
               return LE; }
 
@@ -296,9 +132,6 @@ null        {
         symbol->usage_count += 1;
     }
     
-    
-    
-    
     insert_token(DEF, yytext);
     // Set yylval to point to the symbol table entry
     //yyval.symbol = symbol;
@@ -308,26 +141,13 @@ null        {
     column += yyleng;     
     return IDENT; }
 
-[0-9]+      { 
-              
-              
-              
-              
-              insert_token(DEF, yytext);
+[0-9]+      { insert_token(DEF, yytext);
               column += yyleng;
               return INT_CONSTANT; }
-[0-9]+\.[0-9]+ { 
-                 
-                 
-                 
-                 insert_token(DEF, yytext);
+[0-9]+\.[0-9]+ { insert_token(DEF, yytext);
                  column += yyleng;
                  return FLOAT_CONSTANT; }
-\"([^\\\"]|\\.)*\"  { 
-                      
-                      
-                      
-                      insert_token(DEF, yytext);
+\"([^\\\"]|\\.)*\"  { insert_token(DEF, yytext);
                       column += yyleng;
                       return STRING_CONSTANT; }
 

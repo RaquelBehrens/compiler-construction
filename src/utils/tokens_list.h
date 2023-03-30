@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../../y.tab.h"
+
 #define MAX_SYMBOLS 1000
 
 typedef struct {
