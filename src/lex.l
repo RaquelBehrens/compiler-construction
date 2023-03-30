@@ -3,6 +3,7 @@
 #include "./src/utils/symbol_table.h"
 #include "./src/utils/tokens_list.h"
 #include "y.tab.h"
+#include <string.h>
 
 int valid = 1;
 int column = 1;
@@ -18,273 +19,270 @@ void print_lexical_error();
 %%
 
 def         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return DEF; }
 
 if          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return IF; }
 else        { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return ELSE; }
 for         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return FOR; }
 break       { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return BREAK; }
 return      { 
-             char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+             
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return RETURN; }
 new         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return NEW; }
 read        { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return READ; }
 print       { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return PRINT; }
 int         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return INT_KEYWORD; }
 float       { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return FLOAT_KEYWORD; }
 string      { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return STRING_KEYWORD; }
 null        { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return RETURN_NULL; }
 
 \{          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return LBRACKETS; }
 \}          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return RBRACKETS; }
 \(          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return LPAREN; }
 \)          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return RPAREN; }
 \[          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return LSQRBRACKETS; }
 \]          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return RSQRBRACKETS; }
 
 \;          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return SEMICOLON; }
 \,          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return COMMA; }
  
 \+          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return PLUS; }
 \-          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return MINUS; }
 \*          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return TIMES; }
 \/          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return DIVIDE; }
 \%          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return MOD; }
 
 \=          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return ASSIGN; }
 
 \==         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return EQ; }
 \!=         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return NEQ; }
 \>          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return GT; }
 \<          { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return LT; }
 \>=         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return GE; }
 \<=         { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return LE; }
 
@@ -297,11 +295,11 @@ null        {
     } else {
         symbol->usage_count += 1;
     }
-    char* symbol = yytext;
-    struct token_t token;
-    token.type = DEF;
-    token.word = symbol;
-    insert_token(tok);
+    
+    
+    
+    
+    insert_token(DEF, yytext);
     // Set yylval to point to the symbol table entry
     //yyval.symbol = symbol;
     yylval.address = number_of_symbols()+1;
@@ -311,25 +309,25 @@ null        {
     return IDENT; }
 
 [0-9]+      { 
-              char* symbol = yytext;
-              struct token_t token;
-              token.type = DEF;
-              token.word = symbol;
-              insert_token(tok);
+              
+              
+              
+              
+              insert_token(DEF, yytext);
               column += yyleng;
               return INT_CONSTANT; }
-[0-9]+\.[0-9]+ { char* symbol = yytext;
-                 struct token_t token;
-                 token.type = DEF;
-                 token.word = symbol;
-                 insert_token(tok);
+[0-9]+\.[0-9]+ { 
+                 
+                 
+                 
+                 insert_token(DEF, yytext);
                  column += yyleng;
                  return FLOAT_CONSTANT; }
-\"([^\\\"]|\\.)*\"  { char* symbol = yytext;
-                      struct token_t token;
-                      token.type = DEF;
-                      token.word = symbol;
-                      insert_token(tok);
+\"([^\\\"]|\\.)*\"  { 
+                      
+                      
+                      
+                      insert_token(DEF, yytext);
                       column += yyleng;
                       return STRING_CONSTANT; }
 
