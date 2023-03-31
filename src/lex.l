@@ -193,23 +193,28 @@ void yyerror(char *msg){
 
 int main() {
     char str[20];
-    int found_file = 0;
+    int isExit = 1;
 
-    while (!found_file) {
-        printf("Please, type the file path: ");
+    while (isExit != 0) {
+        printf("Please, type the file path or exit to leave: ");
         scanf("%[^\n]%*c", str);
-        yyin = fopen(str,"r");
-        if (yyin) {
-            found_file = 1;
-            //yylex();
-            yyparse();
-            if(valid){
-                printf("\nSatisfies the grammar\n");
-                print_table();
-                print_tokens();
+
+        int isExit = strcmp(str, "exit");
+        if (isExit != 0) {
+            yyin = fopen(str,"r");
+            if (yyin) {
+                //yylex();
+                yyparse();
+                if(valid){
+                    printf("\nSatisfies the grammar\n");
+                    print_table();
+                    print_tokens();
+                }
+            } else {
+                printf("Can not find this file!\n");
             }
         } else {
-            printf("Can not find this file!\n");
+            break;
         }
     }
     
