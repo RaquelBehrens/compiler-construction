@@ -1,0 +1,112 @@
+def is_valid_address(string address) {
+    if (address == "123 Main St") {
+        print "valid";
+    } else {
+        if (address == "456 Elm St") {
+            print "valid";
+        } else {
+            if (address == "789 Oak St") {
+                print "valid";
+            } else {
+                print "invalid address";
+            }
+        }
+    }
+    
+    return;
+}
+
+def get_person_address(string name) {
+
+    if (name == "Larissa") {
+        print "123 Main St";
+    } else {
+        if (name == "Arthur") {
+            print "456 Elm St";
+        } else {
+            if (name == "Raquel"){
+                print "789 Oak St";
+            } else {
+                print "Address not in saved list";
+            }
+        }
+    }
+
+
+    return;
+}
+
+def print_address_info(string street, string city, string state, string zip) {
+
+    print("The street of the address is");
+    print(street);
+
+    print("The city of the address is");
+    print(city);
+
+    print("The state of the address is");
+    print(state);
+
+    print("The zip code of the address is");
+    print(zip);
+
+    return;
+
+}
+
+
+def main() {
+    string a;
+    a = "Larissa";
+
+    string b;
+    b = "Raquel";
+
+    string c;
+    c = "Arthur";
+
+    string d;
+    d = "Leonardo";
+
+    string e;
+    e = "Amanda";
+    
+    int retorno;
+
+    retorno = get_person_address(a);
+
+    retorno = get_person_address(b);
+
+    retorno = get_person_address(c);
+
+    retorno = get_person_address(d);
+
+    retorno = get_person_address(e);
+
+    string f;
+    f = "123 Main St";
+
+    string g;
+    g = "456 Elm St";
+    
+    string h;
+    h = "789 Oak St";
+
+    retorno = is_valid_address(f);
+    retorno = is_valid_address(g);
+    retorno = is_valid_address(h);
+
+    string i;
+    i = "New York";
+
+    string j;
+    j = "NY";
+
+    string k;
+    k = "10001";
+
+    retorno = print_address_info(f, i, j, k);
+    retorno = print_address_info(g, i, j, k);
+
+}
+

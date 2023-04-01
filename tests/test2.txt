@@ -1,0 +1,101 @@
+def book_in_loved(string book) {
+    if (book == "Harry Potter") {
+        print "loved";
+    } else {
+        if (book == "Percy Jackson") {
+            print "loved";
+        } else {
+            if (book == "Divergente") {
+                print "loved";
+            } else {
+                print "not in loved list";
+            }
+        }
+    }
+    
+    return;
+}
+
+def has_space_for_books(int total, int max) {
+
+    int aux;
+    aux = novos+atuais;
+
+    if (aux >= max) {
+        print "no space for new books";
+    } else {
+        print "you have space for new books";
+    }
+
+    return;
+}
+
+def print_book_info(string name, string author) {
+
+    print("The title of the book is");
+    print(name);
+
+    print("The author of the book is");
+    print(author);
+
+    return;
+
+}
+
+
+def main() {
+    int a;
+    a = 10;
+
+    int b;
+    b = 20;
+
+    int c;
+    c = 30;
+
+    int d;
+    d = 40;
+
+    int e;
+    e = 50;
+
+    int retorno;
+
+    retorno = has_space_for_books(a, b);
+    retorno = has_space_for_books(a, c);
+    retorno = has_space_for_books(a, d);
+    retorno = has_space_for_books(a, e);
+    retorno = has_space_for_books(b, d);
+    retorno = has_space_for_books(b, c);
+    retorno = has_space_for_books(b, a);
+    retorno = has_space_for_books(c, b);
+    retorno = has_space_for_books(c, d);
+    
+
+    string f;
+    f = "O guia do mochileiro das galaxias";
+
+    string g;
+    g = "A descoberta do mundo";
+    
+    string h;
+    h = "A hipótese";
+
+    string i;
+    i = "Harry Potter";
+
+    retorno = book_in_loved(f);
+    retorno = book_in_loved(g);
+    retorno = book_in_loved(h);
+    retorno = book_in_loved(i);
+
+    string j;
+    j = "JK Rowling";
+
+    string k;
+    k = "Clarisse Linspector";
+
+    retorno = print_book_info(i, j);
+    retorno = print_book_info(g, k);
+
+}
