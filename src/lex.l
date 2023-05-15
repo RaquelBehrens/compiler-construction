@@ -57,12 +57,12 @@ null        { insert_token(RETURN_NULL, yytext);
               column += yyleng;
               return RETURN_NULL; }
 
-\{          { insert_token(LBRACKETS, yytext);
+\{          { insert_token(LCURLYBRACKETS, yytext);
               column += yyleng;
-              return LBRACKETS; }
-\}          { insert_token(RBRACKETS, yytext);
+              return LCURLYBRACKETS; }
+\}          { insert_token(RCURLYBRACKETS, yytext);
               column += yyleng;
-              return RBRACKETS; }
+              return RCURLYBRACKETS; }
 \(          { insert_token(LPAREN, yytext);
               column += yyleng;
               return LPAREN; }
