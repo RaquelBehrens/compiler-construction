@@ -1,0 +1,37 @@
+FIRST (PROGRAM) = {int, float, string, ident, print, read, return, if, for, break, '{', ';', def, &}
+FIRST (FUNCLIST) = {def}
+FIRST (FUNCLISTAUX) = {def, &}
+FIRST (FUNCDEF) = {def}
+FIRST (PARAMLIST) = {int, float, string, &}
+FIRST (PARAMLISTAUX) = {',', &}
+FIRST (DATATYPE) = {int, float, string}
+FIRST (STATEMENT) = {int, float, string, ident, print, read,return, if, for, break, '{', ';'}
+FIRST (VARDECL) = {int, float, string}
+FIRST (OPT_VECTOR) = {'[', &}
+FIRST (ATRIBSTAT) = {ident}
+FIRST (ATRIBSTAT_RIGHT) = {+, -, int_constant, float_constant, string_constant, return_null, ident, new}
+FIRST (FUNCCALL_OR_EXPRESSION) = {+, -, int_constant, float_constant, string_constant, return_null, ident}
+FIRST (FOLLOW_IDENT) = {'[', *, /, %, +, -, <, >, <=, >=, ==, /=, &, '('}
+FIRST (PARAMLISTCALL) = {ident, &}
+FIRST (PARAMLISTCALLAUX) = {',', &}
+FIRST (PRINTSTAT) = {print}
+FIRST (READSTAT) = {read}
+FIRST (RETURNSTAT) = {return}
+FIRST (IFSTAT) = {if}
+FIRST (OPT_ELSE) = {else, &}
+FIRST (FORSTAT) = {for}
+FIRST (STATELIST) = {int, float, string, ident, print, read,return, if, for, break, '{', ';'}
+FIRST (OPT_STATELIST) = {int, float, string, ident, print, read,return, if, for, break, '{', ';', &}
+FIRST (ALLOCEXPRESSION) = {new}
+FIRST (OPT_ALLOC_NUMEXP) {'[' &}
+FIRST (EXPRESSION) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FIRST (OPT_REL_OP_NUM_EXPR) = {<, >, <=, >=, ==, /=, &}
+FIRST (REL_OP) = {<, >, <=, >=, ==, /=}
+FIRST (NUMEXPRESSION) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FIRST (PLUS_OR_MINUS) = {+, -}
+FIRST (TERM) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FIRST (REC_UNARYEXPR) = {*, /, %, &}
+FIRST (UNARYEXPR_OP) = {*, /, %}
+FIRST (UNARYEXPR) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FIRST (FACTOR) = {int_constant, float_constant,string_constant,return_null, ident, '('}
+FIRST (LVALUE) = {ident}
