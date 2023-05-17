@@ -1,0 +1,38 @@
+FOLLOW (PROGRAM) = {$}
+FOLLOW (FUNCLIST) = {$}
+FOLLOW (FUNCLISTAUX) = {$}
+FOLLOW (FUNCDEF) = {def, $}
+FOLLOW (PARAMLIST) = {')'}
+FOLLOW (PARAMLISTAUX) = {')'}
+FOLLOW (DATATYPE) = {ident, '['}
+FOLLOW (STATEMENT) = {$, else, int, float, string, ident, print, read,return, if, for, break, '{', ';','}'}
+FOLLOW (VARDECL) = {';'}
+FOLLOW (OPT_VECTOR) = {';'}
+FOLLOW (ATRIBSTAT) = {';', ')'}
+FOLLOW (ATRIBSTAT_RIGHT) = {';', ')'}
+FOLLOW (FUNCCALL_OR_EXPRESSION) = {';', ')'}
+FOLLOW (FOLLOW_IDENT) =  {';', ')'}
+FOLLOW (PARAMLISTCALL) = {')'}
+FOLLOW (PARAMLISTCALLAUX) = {')'}
+FOLLOW (PRINTSTAT) = {';'}
+FOLLOW (READSTAT) = {';'}
+FOLLOW (RETURNSTAT) = {';'}
+FOLLOW (IFSTAT) = {$, else, int, float, string, ident, print, read,return, if, for, break, '{', ';','}'}
+FOLLOW (OPT_ELSE) = {$, else, int, float, string, ident, print, read,return, if, for, break, '{', ';','}'}
+FOLLOW (FORSTAT) = {$, else, int, float, string, ident, print, read,return, if, for, break, '{', ';','}'}
+FOLLOW (STATELIST) = {'}'}
+FOLLOW (OPT_STATELIST) = {'}'}
+FOLLOW (ALLOCEXPRESSION) = {';', ')'}
+FOLLOW (OPT_ALLOC_NUMEXP) = {=, *, /, %, +, -, ']', <, >, <=, >=, ==, /=, ';', ')'}
+FOLLOW (EXPRESSION) = {')', ';'}
+FOLLOW (OPT_REL_OP_NUM_EXPR) = {';', ')'}
+FOLLOW (REL_OP) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FOLLOW (NUMEXPRESSION) = {']', <, >, <=, >=, ==, /=, ';', ')'}
+FOLLOW (REC_PLUS_MINUS_TERM) = {<, >, <=, >=, ==, /=, ';', ')', ']'}
+FOLLOW (PLUS_OR_MINUS) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FOLLOW (TERM) = {+, -, ']', <, >, <=, >=, ==, /=, ';', ')'}
+FOLLOW (REC_UNARYEXPR) = {+, -, ']', <, >, <=, >=, ==, /=, ';', ')'}
+FOLLOW (UNARYEXPR_OP) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FOLLOW (UNARYEXPR) = {*, /, %, +, -, ']', <, >, <=, >=, ==, /=, ';', ')'}
+FOLLOW (FACTOR) = {*, /, %, +, -, ']', <, >, <=, >=, ==, /=, ';', ')'}  
+FOLLOW (LVALUE) = {=, *, /, %, +, -, ']', <, >, <=, >=, ==, /=, ';', ')'}

@@ -28,10 +28,11 @@ FIRST (EXPRESSION) = {+, -, int_constant, float_constant, string_constant, retur
 FIRST (OPT_REL_OP_NUM_EXPR) = {<, >, <=, >=, ==, /=, &}
 FIRST (REL_OP) = {<, >, <=, >=, ==, /=}
 FIRST (NUMEXPRESSION) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
+FIRST (REC_PLUS_MINUS_TERM) = {+, -, &}
 FIRST (PLUS_OR_MINUS) = {+, -}
 FIRST (TERM) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
 FIRST (REC_UNARYEXPR) = {*, /, %, &}
 FIRST (UNARYEXPR_OP) = {*, /, %}
 FIRST (UNARYEXPR) = {+, -, int_constant, float_constant, string_constant, return_null, ident, '('}
-FIRST (FACTOR) = {int_constant, float_constant,string_constant,return_null, ident, '('}
+FIRST (FACTOR) = {int_constant, float_constant, string_constant, return_null, ident, '('}
 FIRST (LVALUE) = {ident}
