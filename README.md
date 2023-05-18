@@ -2,13 +2,21 @@
 
 This application is a compiler for the language defined in 'grammar.pdf'. For now, it only supports lexical analysis. It is based on Lex, in order to develop the lexical analyzer, and Yacc (parser) for further syntax analysis.
 
+To run our application, please first type the following command:
+`make install`
 
-To start the lex:
+Then, to run the compiler, type the following command:
 
-`make`
+`make run`
 
-Type the file path to a source code, and then Lex will start analyzing it. Lex will show the symbol table and the token list, and return any error if found.
+We have three tests files available at ./tests/ directory. Therefore, please type the file path to a source code, for example:
 
-Some tests are already defined at ./tests/.
+`./tests/test1.txt`
+
+Lex will start analyzing it. Lex will show the symbol table and the token list, and return any error if found.
 
 When you are done testing files, just type 'exit' to close the application.
+
+To clean all generated files, please type:
+
+`make clean`

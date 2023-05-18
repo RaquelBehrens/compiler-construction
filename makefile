@@ -1,4 +1,4 @@
-all: execute
+run: execute
 
 execute: parser
 	./parser
@@ -14,3 +14,6 @@ lex.yy.c: ./src/lex.l
 
 clean:
 	rm -rf lex.yy.c y.tab.c y.tab.h ./parser 
+
+install:
+	sudo apt-get install bison flex
