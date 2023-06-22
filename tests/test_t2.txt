@@ -1,0 +1,122 @@
+def grade_for_t2(string student){
+
+    if (student == "Arthur"){
+        print "10";
+    } else {
+        if (student == "Larissa"){
+            print "10";
+        } else {
+            if (student == "Raquel"){
+                print "10";
+            } else {
+                print "8";
+            }
+        }
+    }
+
+    return;
+}
+
+def print_t2_requirements(){
+    print "1 Ser escrita na forma convencional";
+    print "2 Estar fatorada a esquerda";
+    print "3 Nao ter recursao a esquerda";
+    print  "4 provar que e ll1";
+    print "5 explicar como fez o trabalho";
+    return;
+}
+
+def is_ll1(string grammar_fat, string grammar_rec, string grammar_first_follow){
+    if (grammar_fat == "Sim"){
+        if (grammar_rec == "Sim"){
+            if (grammar_first_follow == "Sim"){
+                print "LL1";
+            } else {
+                print "firsts intersecao follows de terminais anulaveis precisa ser vazio";
+            }
+        } else {
+            print "A gramatica tem recursao a esquerda";
+        }
+    } else {
+        print "A gramatica precisa estar fatorada a esquerda";
+    }
+    return;
+}
+
+def grade_calculator(int n1, int n2, int n3){
+    print "A media entre os tres trabalhos sera";
+    int aux1;
+    aux1 = n1 * 2;
+
+    int aux2;
+    aux2 = n2 * 3;
+
+    int aux3;
+    aux3 = n3 * 5;
+
+    int retorno;
+    retorno = aux1 + aux2 + aux3;
+
+    retorno = retorno / 10;
+
+    print retorno;
+    return;
+}
+
+def main() {
+    int a;
+    a = 10;
+
+    int b;
+    b = 8;
+
+    int c;
+    c = 7;
+
+    int d;
+    d = 6;
+
+    int e;
+    e = 5;
+
+    int retorno;
+
+    retorno = grade_calculator(a, b, a);
+    retorno = grade_calculator(a, c, c);
+    retorno = grade_calculator(a, d, d);
+    retorno = grade_calculator(a, e, b);
+    retorno = grade_calculator(b, d, c);
+    retorno = grade_calculator(b, c, c);
+    retorno = grade_calculator(b, a, b);
+    retorno = grade_calculator(c, b, d);
+    retorno = grade_calculator(c, d, a);
+    
+
+    string f;
+    f = "Arthur";
+
+    string g;
+    g = "Larissa";
+    
+    string h;
+    h = "Raquel";
+
+    string i;
+    i = "Aluno x";
+
+    retorno = grade_for_t2(f);
+    retorno = grade_for_t2(g);
+    retorno = grade_for_t2(h);
+    retorno = grade_for_t2(i);
+
+    retorno = print_t2_requirements();
+    string j;
+    j = "Sim";
+
+    string k;
+    k = "Nao";
+
+    retorno = is_ll1(j, j, j);
+    retorno = is_ll1(j, k, k);
+
+}
