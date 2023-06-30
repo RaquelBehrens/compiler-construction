@@ -1,0 +1,28 @@
+NUMEXPRESSION -> TERM REC_PLUS_MINUS_TERM (NUMEXPRESSION.node = REC_PLUS_MINUS_TERM.node/ NUMEXPRESSION.node.fe = TERM.node)
+
+REC_PLUS_MINUS_TERM1 -> PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM2 ( PLUS_OR_MINUS.node.fd = REC_PLUS_MINUS_TERM2.node \ REC_PLUS_MINUS_TERM2.node.fe = TERM.node \ REC_PLUS_MINUS_TERM1.node = PLUS_OR_MINUS.node)
+                        | & (new node (num, , ,))
+
+PLUS_OR_MINUS -> + (new node(+, ,))
+                | - (new node(-, ,))
+
+TERM -> UNARYEXPR REC_UNARYEXPR (TERM.node = REC_UNARYEXPR.node / REC_UNARYEXPR.node.fe = UNARYEXPR.node)
+
+REC_UNARYEXPR -> UNARYEXPR_OP TERM (UNARYEXPR_OP.node.fd = TERM.node \ REC_UNARYEXPR.node = UNARYEXPR_OP.node)
+                | & (new node (num, , ,))
+
+UNARYEXPR_OP -> * (new node(*, ,))
+                | / (new node(/, ,))
+                | % (new node(%, ,))
+
+UNARYEXPR -> PLUS_OR_MINUS FACTOR (PLUS_OR_MINUS.node.fe = FACTOR.node / UNARYEXPR.node = PLUS_OR_MINUS.node)
+            | FACTOR (UNARYEXPR.node = FACTOR.node)
+
+FACTOR -> int_constant (new node(int_constant, lex))
+       | float_constant (new node(float_constant, lex))
+       | string_constant (new node(string_constant, lex))
+       | return_null (new node(return_null, lex))
+       | LVALUE (FACTOR.node = LVALUE.node)
+       | ( NUMEXPRESSION ) (FACTOR.node = NUMEXPRESSION.node)
+
+LVALUE -> ident OPT_ALLOC_NUMEXP (LVALUE.node = new node(id, ident, val_from_table))

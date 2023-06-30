@@ -23,6 +23,6 @@ FACTOR -> int_constant (new node(int_constant, lex))
        | string_constant (new node(string_constant, lex))
        | return_null (new node(return_null, lex))
        | LVALUE (FACTOR.node = LVALUE.node)
-       | ( NUMEXPRESSION ) (FACTOR.val = NUMEXPRESSION.val)
+       | ( NUMEXPRESSION ) (FACTOR.node = NUMEXPRESSION.node)
 
 LVALUE -> ident OPT_ALLOC_NUMEXP (LVALUE.node = new node(id, ident, val_from_table))
