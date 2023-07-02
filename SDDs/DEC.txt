@@ -1,0 +1,5 @@
+VARDECL -> DATATYPE ident OPT_VECTOR (VARDECL.type = DATATYPE.type ident.type = DATATYPE.type OPT_VECTOR.her = false DATATYPE.list = OPT_VECTOR.list ident.list = OPT_VECTOR.list)
+
+DATATYPE -> int | float | string (DATATYPE.type = int.lexval | float.lexval | string.lexval)
+         
+OPT_VECTOR1 -> [ int_constant ] OPT_VECTOR2 (OPT_VECTOR2.her = true) | & (OPT_VECTOR1.list = OPT_VECTOR1.her)
