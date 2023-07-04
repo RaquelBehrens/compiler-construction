@@ -11,8 +11,10 @@ void yyerror(char* s);
 
 %union{
   int address;
-  char *symbol;
+  char symbol[32];
   int usage_count;
+  char code[50];
+  char big_code[600];
 }
 
 %token <symbol> DEF
@@ -61,45 +63,45 @@ void yyerror(char* s);
 %token <symbol> FLOAT_CONSTANT
 %token <symbol> STRING_CONSTANT
 
-%type <symbol> PROGRAM
-%type <symbol> STATEMENT
-%type <symbol> FUNCLIST
-%type <symbol> FUNCLISTAUX
-%type <symbol> FUNCDEF
-%type <symbol> PARAMLIST
-%type <symbol> PARAMLISTAUX
-%type <symbol> DATATYPE
-%type <symbol> VARDECL
-%type <symbol> OPT_VECTOR
-%type <symbol> ATRIBSTAT
-%type <symbol> ATRIBSTAT_RIGHT
-%type <symbol> FUNCCALL_OR_EXPRESSION
-%type <symbol> FOLLOW_IDENT
-%type <symbol> PARAMLISTCALL
-%type <symbol> PARAMLISTCALLAUX
-%type <symbol> PRINTSTAT
-%type <symbol> READSTAT
-%type <symbol> RETURNSTAT
-%type <symbol> IFSTAT
-%type <symbol> OPT_ELSE
-%type <symbol> FORSTAT
-%type <symbol> STATELIST
-%type <symbol> OPT_STATELIST
-%type <symbol> ALLOCEXPRESSION
-%type <symbol> OPT_ALLOC_NUMEXP
-%type <symbol> EXPRESSION
-%type <symbol> OPT_REL_OP_NUM_EXPR
-%type <symbol> REL_OP
-%type <symbol> NUMEXPRESSION
-%type <symbol> REC_PLUS_MINUS_TERM
-%type <symbol> PLUS_OR_MINUS
-%type <symbol> TERM
-%type <symbol> REC_UNARYEXPR
-%type <symbol> UNARYEXPR_OP
-%type <symbol> UNARYEXPR
-%type <symbol> FACTOR
-%type <symbol> LVALUE
-%type <symbol> ID
+%type <big_code> PROGRAM
+%type <big_code> STATEMENT
+%type <big_code> FUNCLIST
+%type <code> FUNCLISTAUX
+%type <code> FUNCDEF
+%type <code> PARAMLIST
+%type <code> PARAMLISTAUX
+%type <code> DATATYPE
+%type <code> VARDECL
+%type <code> OPT_VECTOR
+%type <code> ATRIBSTAT
+%type <code> ATRIBSTAT_RIGHT
+%type <code> FUNCCALL_OR_EXPRESSION
+%type <code> FOLLOW_IDENT
+%type <code> PARAMLISTCALL
+%type <code> PARAMLISTCALLAUX
+%type <code> PRINTSTAT
+%type <code> READSTAT
+%type <code> RETURNSTAT
+%type <code> IFSTAT
+%type <code> OPT_ELSE
+%type <code> FORSTAT
+%type <code> STATELIST
+%type <code> OPT_STATELIST
+%type <code> ALLOCEXPRESSION
+%type <code> OPT_ALLOC_NUMEXP
+%type <code> EXPRESSION
+%type <code> OPT_REL_OP_NUM_EXPR
+%type <code> REL_OP
+%type <code> NUMEXPRESSION
+%type <code> REC_PLUS_MINUS_TERM
+%type <code> PLUS_OR_MINUS
+%type <code> TERM
+%type <code> REC_UNARYEXPR
+%type <code> UNARYEXPR_OP
+%type <code> UNARYEXPR
+%type <code> FACTOR
+%type <code> LVALUE
+%type <code> ID
 
 
 
@@ -108,110 +110,85 @@ void yyerror(char* s);
 %start PROGRAM
 %%
 
-PROGRAM : STATEMENT {$$ = $1;
+PROGRAM : STATEMENT {strcpy($$, $1);
                      printf("OI3\n");
                      puts($$);
                      }
-        | FUNCLIST   {$$ = $1;
-                      printf("OI1\n");
+        | FUNCLIST   {strcpy($$, $1);
                       puts($$);
                      }      
         | 
         ;
            
 FUNCLIST : FUNCDEF FUNCLISTAUX {
-                                char* def = $1;
-                                printf("1\n");
-                                char* func_list = $2;
-                                int size = sizeof(def) + sizeof(func_list);
-                                char code[size];
-                                strcat(code, def);
-                                strcat(code, func_list);
-                                $$ = code;
+                                char code[500];
+                                strcat(code, $1);
+                                strcat(code, $2);
+                                strcpy($$, code);
                                };
         
-FUNCLISTAUX : FUNCLIST { $$ = $1;
-printf("7\n"); }
+FUNCLISTAUX : FUNCLIST { strcpy($$, $1); }
             | {
-               printf("2\n");
-               char vazio[] = " ";
-               $$ = vazio;
+               char vazio[1] = " ";
+               strcpy($$, vazio);
               };
             
 FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS {
        //char* next_label = new_label();
-       char* name = $2;
-       printf("3\n");
-       char* param_list = $4;
-       char* func = $7;
-       int size = sizeof(name) + sizeof(param_list) + sizeof(func) + 30;
-       char code[size];
+       char code[500];
        strcat(code, "goto ");
        //strcat(code, new_label);
        strcat(code, "\n");
-       strcat(code, name);
+       strcat(code, $2);
        strcat(code, " :\n");
-       strcat(code, param_list);
-       strcat(code, func);
+       strcat(code, $4);
+       strcat(code, $7);
        strcat(code, "\n");
        //strcat(code, next_label);
        strcat(code, "\n");
-       $$ = code;
+       strcpy($$, code);
+       puts(code);
 };
-
-ID : IDENT { printf("veio?\n");
-$$ = yylval.symbol; }
           
 PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
-                                         char* param = $2;
-                                         printf("4\n");
-                                         
-                                         char* list = $3;
-                                         puts(list);
-                                         int size = sizeof(param) + sizeof(list) + 10;
-                                         char code[size];
-                                         printf("5\n");
+                                         char code[50];
                                          strcat(code, "param ");
-                                         printf("9\n");
-                                         strcat(code, param);
-                                         printf("7\n");
-                                         strcat(code, list);
-                                         printf("6\n");
-                                         $$ = code;     
+                                         strcat(code, $2);
+                                         strcat(code, ", ");
+                                         strcat(code, $3);
+                                         strcpy($$, code);   
                                         }
           | {
-             char code[] = " ";
-             $$ = code;
+             char code[1] = " ";
+             strcpy($$, code);
             }
           ;
        
 PARAMLISTAUX : COMMA PARAMLIST {
-                                $$ = $2;
-                                printf("5\n");
+                                strcpy($$, $2);
                                }
              | {
-                printf("6\n");
                 char code[] = "\n";
-                $$ = code;
+                strcpy($$, code);
                }
              ;
            
-DATATYPE : INT_KEYWORD { $$ = $1; }
+DATATYPE : INT_KEYWORD { strcpy($$, $1); }
          | FLOAT_KEYWORD
          | STRING_KEYWORD;
           
-STATEMENT : VARDECL SEMICOLON {$$ = $1;}
-          | ATRIBSTAT SEMICOLON {$$ = $1;}
-          | PRINTSTAT SEMICOLON {$$ = $1;}
-          | READSTAT SEMICOLON {$$ = $1;}
-          | RETURNSTAT SEMICOLON {$$ = $1;}
-          | IFSTAT {$$ = $1;}
-          | FORSTAT {$$ = $1;}
-          | LCURLYBRACKETS STATELIST RCURLYBRACKETS {$$ = $2;}
-          | BREAK SEMICOLON {$$ = $2;} //terminar
+STATEMENT : VARDECL SEMICOLON { strcpy($$, $1); }
+          | ATRIBSTAT SEMICOLON { strcpy($$, $1); }
+          | PRINTSTAT SEMICOLON { strcpy($$, $1); }
+          | READSTAT SEMICOLON { strcpy($$, $1); }
+          | RETURNSTAT SEMICOLON { strcpy($$, $1); }
+          | IFSTAT { strcpy($$, $1); }
+          | FORSTAT { strcpy($$, $1); }
+          | LCURLYBRACKETS STATELIST RCURLYBRACKETS { strcpy($$, $1); }
+          | BREAK SEMICOLON { strcpy($$, $1); } //terminar
           | SEMICOLON {
              char code[] = " ";
-             $$ = code;
+             strcpy($$, code);
             }
           ;
             
