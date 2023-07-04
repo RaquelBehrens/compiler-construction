@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "./src/utils/syntactic_symbol_table.h"
+#include "./src/utils/types.h"
+#include "./src/utils/stack.h"
 
 int yylex();
 void yyerror(char* s);
