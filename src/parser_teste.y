@@ -538,7 +538,7 @@ REC_UNARYEXPR : UNARYEXPR_OP TERM {
                      this_scope.operation = $1.operation;
                      $$ = this_scope;
               }
-              | { $$ = None; }
+              | { $$ = NULL; }
               ;
        
 UNARYEXPR_OP : TIMES {

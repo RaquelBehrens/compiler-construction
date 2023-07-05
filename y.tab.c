@@ -80,13 +80,13 @@ void yyerror(char* s);
 
 char * get_var_type();
 
-typedef struct {
-       node node;
-       char * operation;
+typedef struct scope_and_expressions {
+       char operation[32];
        char * vector;
+       node node;
 } scope_and_expressions;
 
-int top_num_expressions = -1
+int top_num_expressions = -1;
 node num_expressions[10000];
 
 
@@ -226,10 +226,11 @@ union YYSTYPE
   char symbol[50];
   int usage_count;
   int integer_return;
-  node node;
-  scope_and_expressions scope_and_expressions;
+  float float_return;
+  struct node *node;
+  struct scope_and_expressions *scope_and_expressions;
 
-#line 233 "y.tab.c"
+#line 234 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -608,15 +609,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   126,   126,   127,   128,   131,   133,   134,   137,   151,
-     157,   160,   161,   164,   165,   166,   168,   169,   170,   171,
-     172,   173,   174,   175,   179,   191,   193,   199,   203,   209,
-     211,   212,   214,   244,   247,   248,   249,   250,   251,   252,
-     254,   255,   257,   258,   261,   262,   265,   267,   269,   271,
-     273,   274,   277,   279,   281,   282,   285,   287,   288,   291,
-     293,   294,   297,   298,   299,   300,   301,   302,   304,   306,
-     307,   310,   311,   313,   315,   316,   319,   320,   321,   323,
-     324,   326,   327,   328,   329,   330,   331,   333
+       0,   127,   127,   128,   129,   132,   134,   135,   138,   152,
+     158,   161,   162,   165,   166,   167,   169,   170,   171,   172,
+     173,   174,   175,   176,   180,   192,   194,   200,   204,   210,
+     212,   213,   215,   233,   252,   276,   300,   324,   325,   348,
+     350,   351,   353,   354,   357,   358,   361,   363,   365,   367,
+     369,   370,   373,   375,   377,   378,   381,   383,   384,   387,
+     389,   390,   393,   394,   395,   396,   397,   398,   400,   402,
+     403,   406,   407,   409,   411,   412,   415,   416,   417,   419,
+     420,   422,   423,   424,   425,   426,   427,   429
 };
 #endif
 
@@ -1528,7 +1529,7 @@ yyreduce:
   switch (yyn)
     {
   case 8:
-#line 137 "./src/parser.y"
+#line 138 "./src/parser.y"
                                                                                    { 
        // Go back to upper scope
        // scopes.pop()
@@ -1541,49 +1542,49 @@ yyreduce:
        int dimension[32];
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-6].symbol), type, 1, dimension);
 }
-#line 1545 "y.tab.c"
+#line 1546 "y.tab.c"
     break;
 
   case 9:
-#line 151 "./src/parser.y"
+#line 152 "./src/parser.y"
                                         {
        // Add function declaration to this scope symbol table
        scope scope = peek();
        int dimension[32];
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-1].symbol), (yyvsp[-2].symbol), 1, dimension);
 }
-#line 1556 "y.tab.c"
+#line 1557 "y.tab.c"
     break;
 
   case 13:
-#line 164 "./src/parser.y"
+#line 165 "./src/parser.y"
                        { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1562 "y.tab.c"
+#line 1563 "y.tab.c"
     break;
 
   case 14:
-#line 165 "./src/parser.y"
+#line 166 "./src/parser.y"
                          { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1568 "y.tab.c"
+#line 1569 "y.tab.c"
     break;
 
   case 15:
-#line 166 "./src/parser.y"
+#line 167 "./src/parser.y"
                           { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1574 "y.tab.c"
+#line 1575 "y.tab.c"
     break;
 
   case 23:
-#line 175 "./src/parser.y"
+#line 176 "./src/parser.y"
                                                     {
               //scopes.pop()
               pop();
           }
-#line 1583 "y.tab.c"
+#line 1584 "y.tab.c"
     break;
 
   case 24:
-#line 179 "./src/parser.y"
+#line 180 "./src/parser.y"
                             {
               int t = top;
               while (true) {
@@ -1596,81 +1597,212 @@ yyreduce:
                   }             
               }
           }
-#line 1600 "y.tab.c"
+#line 1601 "y.tab.c"
     break;
 
   case 26:
-#line 193 "./src/parser.y"
+#line 194 "./src/parser.y"
                                     {
        scope scope = peek();
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-1].symbol), (yyvsp[-2].symbol), 1, (yyvsp[0].symbol));
 }
-#line 1609 "y.tab.c"
+#line 1610 "y.tab.c"
     break;
 
   case 27:
-#line 199 "./src/parser.y"
+#line 200 "./src/parser.y"
                                                                {
               int dimension[32][32] = {{(yyvsp[-2].integer_return)}, {(yyvsp[0].symbol)}};
               (yyval.symbol) = dimension;
            }
-#line 1618 "y.tab.c"
+#line 1619 "y.tab.c"
     break;
 
   case 28:
-#line 203 "./src/parser.y"
+#line 204 "./src/parser.y"
              {
               int dimension[] = {};
               (yyval.symbol) = dimension;
            }
-#line 1627 "y.tab.c"
+#line 1628 "y.tab.c"
     break;
 
   case 32:
-#line 214 "./src/parser.y"
+#line 215 "./src/parser.y"
                                                                                           {
-                            int right_node = (yyvsp[-3].symbol).node;
+                            node right_node = (yyvsp[-3].scope_and_expressions)->node;
 
-                            if ((yyvsp[-2].scope_and_expressions)) {
-                                   char * result_type = check_operation((yyvsp[-2].scope_and_expressions).node, right_node, (yyvsp[-2].scope_and_expressions).operation)
-
-                                   node new_right_node_result;
-                                   new_right_node_result.node_before = (yyvsp[-2].scope_and_expressions).node;
-                                   new_right_node_result.node_after = right_node;
-                                   new_right_node_result.operation = (yyvsp[-2].scope_and_expressions).operation;
-                                   new_right_node_result.result = result_type;
-                                   
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation((yyvsp[-2].scope_and_expressions)->node.result, right_node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {(yyvsp[-2].scope_and_expressions)->node.result, right_node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
                                    right_node = new_right_node_result;
                             }
 
-                            if ((yyvsp[-1].scope_and_expressions)) {
-                                   char * result_type = check_operation((yyvsp[-1].scope_and_expressions).node, right_node, (yyvsp[-1].scope_and_expressions).operation)
-
-                                   node new_right_node_result;
-                                   new_right_node_result.node_before = (yyvsp[-1].scope_and_expressions).node;
-                                   new_right_node_result.node_after = right_node;
-                                   new_right_node_result.operation = (yyvsp[-1].scope_and_expressions).operation;
-                                   new_right_node_result.result = result_type;
-                                   
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation((yyvsp[-1].scope_and_expressions)->node.result, right_node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {(yyvsp[-1].scope_and_expressions)->node.result, right_node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
                                    right_node = new_right_node_result;
                             }
 
                             num_expressions[top_num_expressions] = right_node;
                             top_num_expressions += 1;
                       }
-#line 1662 "y.tab.c"
+#line 1651 "y.tab.c"
     break;
 
   case 33:
-#line 244 "./src/parser.y"
+#line 233 "./src/parser.y"
                                                                                            {
+                            node right_node = (yyvsp[-3].scope_and_expressions)->node;
+                            right_node.value *= -1;
 
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation((yyvsp[-2].scope_and_expressions)->node.result, right_node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {(yyvsp[-2].scope_and_expressions)->node.result, right_node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
+                                   right_node = new_right_node_result;
+                            }
+
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation((yyvsp[-1].scope_and_expressions)->node.result, right_node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {(yyvsp[-1].scope_and_expressions)->node.result, right_node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                                   right_node = new_right_node_result;
+                            }
+
+                            num_expressions[top_num_expressions] = right_node;
+                            top_num_expressions += 1;
                       }
-#line 1670 "y.tab.c"
+#line 1675 "y.tab.c"
+    break;
+
+  case 34:
+#line 252 "./src/parser.y"
+                                                                                           {
+                            node new_node;
+                            new_node.value = (yyvsp[-3].integer_return);
+                            new_node.result = "int";
+
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            (yyval.scope_and_expressions) = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+#line 1704 "y.tab.c"
+    break;
+
+  case 35:
+#line 276 "./src/parser.y"
+                                                                                             {
+                            node new_node;
+                            new_node.value = (yyvsp[-3].float_return);
+                            new_node.result = "float";
+
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            (yyval.scope_and_expressions) = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+#line 1733 "y.tab.c"
+    break;
+
+  case 36:
+#line 300 "./src/parser.y"
+                                                                                              {
+                            node new_node;
+                            new_node.string_value = (yyvsp[-3].symbol);
+                            new_node.result = "string";
+
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            (yyval.scope_and_expressions) = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+#line 1762 "y.tab.c"
+    break;
+
+  case 38:
+#line 325 "./src/parser.y"
+                                                                                                          {
+                            node new_node;
+                            new_node = (yyvsp[-4].scope_and_expressions)->node;
+
+                            if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-2].scope_and_expressions)->node.result, (yyvsp[-2].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                                   char * result_type = check_operation(new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            (yyval.scope_and_expressions) = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+#line 1790 "y.tab.c"
+    break;
+
+  case 49:
+#line 367 "./src/parser.y"
+                                                        { pop(); }
+#line 1796 "y.tab.c"
+    break;
+
+  case 50:
+#line 369 "./src/parser.y"
+                          { pop(); }
+#line 1802 "y.tab.c"
     break;
 
 
-#line 1674 "y.tab.c"
+#line 1806 "y.tab.c"
 
       default: break;
     }
@@ -1902,7 +2034,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 335 "./src/parser.y"
+#line 431 "./src/parser.y"
 
 
 char * get_var_type(char *ident) {
@@ -1911,7 +2043,7 @@ char * get_var_type(char *ident) {
     for (int i = 0; i < top; i++) {
        sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
        if (symbol != NULL) {
-              return symbol.type;
+              return symbol->type;
        }
     }
     printf("Error: Variable %s was not declared!\n", ident);

@@ -137,10 +137,11 @@ union YYSTYPE
   char symbol[50];
   int usage_count;
   int integer_return;
-  node node;
-  scope_and_expressions scope_and_expressions;
+  float float_return;
+  struct node *node;
+  struct scope_and_expressions *scope_and_expressions;
 
-#line 144 "y.tab.h"
+#line 145 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -11,13 +11,13 @@ void yyerror(char* s);
 
 char * get_var_type();
 
-typedef struct {
-       node node;
-       char * operation;
+typedef struct scope_and_expressions {
+       char operation[32];
        char * vector;
+       node node;
 } scope_and_expressions;
 
-int top_num_expressions = -1
+int top_num_expressions = -1;
 node num_expressions[10000];
 
 %}
@@ -27,8 +27,9 @@ node num_expressions[10000];
   char symbol[50];
   int usage_count;
   int integer_return;
-  node node;
-  scope_and_expressions scope_and_expressions;
+  float float_return;
+  struct node *node;
+  struct scope_and_expressions *scope_and_expressions;
 }
 
 
@@ -75,7 +76,7 @@ node num_expressions[10000];
 %token <symbol> IDENT 
 
 %token <integer_return> INT_CONSTANT
-%token <symbol> FLOAT_CONSTANT
+%token <float_return> FLOAT_CONSTANT
 %token <symbol> STRING_CONSTANT
 
 %type <symbol> PROGRAM
@@ -114,8 +115,8 @@ node num_expressions[10000];
 %type <scope_and_expressions> REC_UNARYEXPR
 %type <scope_and_expressions> UNARYEXPR_OP
 %type <symbol> UNARYEXPR
-%type <symbol> FACTOR
-%type <symbol> LVALUE
+%type <scope_and_expressions> FACTOR
+%type <scope_and_expressions> LVALUE
 %type <symbol> ID
 
 
@@ -212,29 +213,17 @@ ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION
             | ALLOCEXPRESSION;                  
 
 FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            int right_node = $2.node;
+                            node right_node = $2->node;
 
-                            if ($3) {
-                                   char * result_type = check_operation($3.node, right_node, $3.operation)
-
-                                   node new_right_node_result;
-                                   new_right_node_result.node_before = $3.node;
-                                   new_right_node_result.node_after = right_node;
-                                   new_right_node_result.operation = $3.operation;
-                                   new_right_node_result.result = result_type;
-                                   
+                            if ($3 != NULL) {
+                                   char * result_type = check_operation($3->node.result, right_node.result, $3->operation);
+                                   node new_right_node_result = {$3->node.result, right_node.result, $3->operation, result_type};
                                    right_node = new_right_node_result;
                             }
 
-                            if ($4) {
-                                   char * result_type = check_operation($4.node, right_node, $4.operation)
-
-                                   node new_right_node_result;
-                                   new_right_node_result.node_before = $4.node;
-                                   new_right_node_result.node_after = right_node;
-                                   new_right_node_result.operation = $4.operation;
-                                   new_right_node_result.result = result_type;
-                                   
+                            if ($4 != NULL) {
+                                   char * result_type = check_operation($4->node.result, right_node.result, $4->operation);
+                                   node new_right_node_result = {$4->node.result, right_node.result, $4->operation, result_type};
                                    right_node = new_right_node_result;
                             }
 
@@ -242,14 +231,121 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | MINUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            node right_node = $2->node;
+                            right_node.value *= -1;
 
+                            if ($3 != NULL) {
+                                   char * result_type = check_operation($3->node.result, right_node.result, $3->operation);
+                                   node new_right_node_result = {$3->node.result, right_node.result, $3->operation, result_type};
+                                   right_node = new_right_node_result;
+                            }
+
+                            if ($4 != NULL) {
+                                   char * result_type = check_operation($4->node.result, right_node.result, $4->operation);
+                                   node new_right_node_result = {$4->node.result, right_node.result, $4->operation, result_type};
+                                   right_node = new_right_node_result;
+                            }
+
+                            num_expressions[top_num_expressions] = right_node;
+                            top_num_expressions += 1;
                       }
-                      | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
-                      | FLOAT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
-                      | STRING_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
+                      | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            node new_node;
+                            new_node.value = $1;
+                            new_node.result = "int";
+
+                            if ($2 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $2->node.result, $2->operation);
+                                   node new_right_node_result = {new_node.result, $2->node.result, $2->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ($3 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $3->node.result, $3->operation);
+                                   node new_right_node_result = {new_node.result, $3->node.result, $3->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            $$ = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+                      | FLOAT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            node new_node;
+                            new_node.value = $1;
+                            new_node.result = "float";
+
+                            if ($2 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $2->node.result, $2->operation);
+                                   node new_right_node_result = {new_node.result, $2->node.result, $2->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ($3 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $3->node.result, $3->operation);
+                                   node new_right_node_result = {new_node.result, $3->node.result, $3->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            $$ = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+                      | STRING_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            node new_node;
+                            new_node.string_value = $1;
+                            new_node.result = "string";
+
+                            if ($2 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $2->node.result, $2->operation);
+                                   node new_right_node_result = {new_node.result, $2->node.result, $2->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ($3 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $3->node.result, $3->operation);
+                                   node new_right_node_result = {new_node.result, $3->node.result, $3->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            $$ = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
                       | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
-                      | LPAREN NUMEXPRESSION RPAREN REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
-                      | IDENT FOLLOW_IDENT;
+                      | LPAREN NUMEXPRESSION RPAREN REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            node new_node;
+                            new_node = $2->node;
+
+                            if ($4 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $4->node.result, $4->operation);
+                                   node new_right_node_result = {new_node.result, $4->node.result, $4->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            if ($5 != NULL) {
+                                   char * result_type = check_operation(new_node.result, $5->node.result, $5->operation);
+                                   node new_right_node_result = {new_node.result, $5->node.result, $5->operation, result_type};
+                                   new_node = new_right_node_result;
+                            }
+
+                            scope_and_expressions * this_scope;
+                            this_scope->node = new_node;
+                            $$ = this_scope;
+
+                            num_expressions[top_num_expressions] = new_node;
+                            top_num_expressions += 1;
+                      }
+                      | IDENT FOLLOW_IDENT ;
 
 FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
             | LPAREN PARAMLISTCALL RPAREN;
@@ -340,7 +436,7 @@ char * get_var_type(char *ident) {
     for (int i = 0; i < top; i++) {
        sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
        if (symbol != NULL) {
-              return symbol.type;
+              return symbol->type;
        }
     }
     printf("Error: Variable %s was not declared!\n", ident);

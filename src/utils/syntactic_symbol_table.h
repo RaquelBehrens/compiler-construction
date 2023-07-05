@@ -21,7 +21,7 @@ sst* lookup_sst_symbol(sst *symbol_table, int num_symbols, char* symbol) {
     return NULL;
 }
 
-void insert_new_sst_symbol(sst *symbol_table, int num_symbols, char* symbol, char* type, int usage_count, int dimentions []) {
+void insert_new_sst_symbol(sst *symbol_table, int num_symbols, char* symbol, char* type, int usage_count, char* dimentions []) {
     sst* table_entry = lookup_sst_symbol(symbol_table, num_symbols, symbol);
     if (table_entry == NULL) {
         if (num_symbols >= MAX_SYMBOLS) {
