@@ -2,21 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_VAR 50
-
-typedef struct {
-    char node_before[32];
-    int is_funcall;
-    char op[2];
-    char code[200];
-    char last_temp[3];
-    char var[50];
-} semantic;
+#define MAX_VAR 200
 
 char* DEALLOCATED_TEMP_VARS[MAX_VAR] ;
 char* ALLOCATED_TEMP_VARS[MAX_VAR];
+char last_for_end_lable_[10];
 int LABEL_COUNT = 0;
 int unused_temps = 0;
+
+typedef struct opt_else {
+    char label[10];
+    char code[100];
+} opt_else;
 
 void get_temp_var(char* var) {
     if (unused_temps) {
