@@ -22,7 +22,7 @@ lex.yy.c: ./src/lex.l
 	lex ./src/lex.l
 
 clean:
-	rm -rf lex.yy.c y.tab.c y.tab.h ./parser 
+	rm -rf lex.yy.c y.tab.c y.tab.h ./parser ./parser_code
 
 install:
 	sudo apt-get install bison flex
