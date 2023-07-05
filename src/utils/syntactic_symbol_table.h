@@ -11,9 +11,19 @@ typedef struct {
     int dimensions[100];
 } sst;
 
+sst* lookup_sst_symbol(sst *symbol_table, int num_symbols, char* symbol) {
+    int i;
+    for (i = 0; i < num_symbols; i++) {
+        if (strcmp(symbol_table[i].symbol, symbol) == 0) {
+            return &symbol_table[i];
+        }
+    }
+    return NULL;
+}
+
 void insert_new_symbol(sst *symbol_table, int num_symbols, char* symbol, char* type, int usage_count) {
-    sst* symbol = lookup_symbol(symbol_table, num_symbols, symbol);
-    if (symbol == NULL) {
+    sst* table_entry = lookup_sst_symbol(symbol_table, num_symbols, symbol);
+    if (table_entry == NULL) {
         if (num_symbols >= MAX_SYMBOLS) {
             printf("Error: symbol table overflow\n");
             return;
@@ -28,24 +38,7 @@ void insert_new_symbol(sst *symbol_table, int num_symbols, char* symbol, char* t
     }
 }
 
-//remember to create a function to increase usage count of a symbol
-'''
-if (strcmp(symbol.type, type) == 0) {
-            symbol.usage_count += 1;
-        } else {
-'''
-
-sst* lookup_symbol(sst *symbol_table, int num_symbols, char* symbol) {
-    int i;
-    for (i = 0; i < num_symbols; i++) {
-        if (strcmp(symbol_table[i].symbol, symbol) == 0) {
-            return &symbol_table[i];
-        }
-    }
-    return NULL;
-}
-
-void print_table(sst *symbol_table, int num_symbols) {
+void print_sst_table(sst *symbol_table, int num_symbols) {
     int i;
     printf("Symbol Table\n");
     for (i = 0; i < num_symbols; i++) {
