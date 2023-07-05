@@ -9,12 +9,26 @@
 int yylex();
 void yyerror(char* s);
 
+char * get_var_type();
+
+typedef struct {
+       node node;
+       char * operation;
+       char * vector;
+} scope_and_expressions;
+
+int top_num_expressions = -1
+node num_expressions[10000];
+
 %}
 
 %union{
   int address;
-  char *symbol;
+  char symbol[50];
   int usage_count;
+  int integer_return;
+  node node;
+  scope_and_expressions scope_and_expressions;
 }
 
 
@@ -60,7 +74,7 @@ void yyerror(char* s);
 
 %token <symbol> IDENT 
 
-%token <symbol> INT_CONSTANT
+%token <integer_return> INT_CONSTANT
 %token <symbol> FLOAT_CONSTANT
 %token <symbol> STRING_CONSTANT
 
@@ -76,8 +90,8 @@ void yyerror(char* s);
 %type <symbol> OPT_VECTOR
 %type <symbol> ATRIBSTAT
 %type <symbol> ATRIBSTAT_RIGHT
-%type <symbol> FUNCCALL_OR_EXPRESSION
-%type <symbol> FOLLOW_IDENT
+%type <scope_and_expressions> FUNCCALL_OR_EXPRESSION
+%type <scope_and_expressions> FOLLOW_IDENT
 %type <symbol> PARAMLISTCALL
 %type <symbol> PARAMLISTCALLAUX
 %type <symbol> PRINTSTAT
@@ -88,17 +102,17 @@ void yyerror(char* s);
 %type <symbol> FORSTAT
 %type <symbol> STATELIST
 %type <symbol> OPT_STATELIST
-%type <symbol> ALLOCEXPRESSION
-%type <symbol> OPT_ALLOC_NUMEXP
-%type <symbol> EXPRESSION
-%type <symbol> OPT_REL_OP_NUM_EXPR
+%type <node> ALLOCEXPRESSION
+%type <node> OPT_ALLOC_NUMEXP
+%type <node> EXPRESSION
+%type <node> OPT_REL_OP_NUM_EXPR
 %type <symbol> REL_OP
-%type <symbol> NUMEXPRESSION
-%type <symbol> REC_PLUS_MINUS_TERM
-%type <symbol> PLUS_OR_MINUS
-%type <symbol> TERM
-%type <symbol> REC_UNARYEXPR
-%type <symbol> UNARYEXPR_OP
+%type <scope_and_expressions> NUMEXPRESSION
+%type <scope_and_expressions> REC_PLUS_MINUS_TERM
+%type <scope_and_expressions> PLUS_OR_MINUS
+%type <scope_and_expressions> TERM
+%type <scope_and_expressions> REC_UNARYEXPR
+%type <scope_and_expressions> UNARYEXPR_OP
 %type <symbol> UNARYEXPR
 %type <symbol> FACTOR
 %type <symbol> LVALUE
@@ -129,14 +143,17 @@ FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACK
        //scope scope = scopes.peek();
        scope scope = peek();
        char type[9] = "function";
-       int dimension[100];
-
-       char* ident = $2;
-       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, ident, type, 1, dimension);
+       int dimension[32];
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, type, 1, dimension);
 }; 
           
           
-PARAMLIST : DATATYPE IDENT PARAMLISTAUX
+PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
+       // Add function declaration to this scope symbol table
+       scope scope = peek();
+       int dimension[32];
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
+}
           | 
           ;
        
@@ -144,9 +161,9 @@ PARAMLISTAUX : COMMA PARAMLIST
              | 
              ;
            
-DATATYPE : INT_KEYWORD
-         | FLOAT_KEYWORD
-         | STRING_KEYWORD;
+DATATYPE : INT_KEYWORD { strcpy($$, $1); }
+         | FLOAT_KEYWORD { strcpy($$, $1); }
+         | STRING_KEYWORD { strcpy($$, $1); };
           
 STATEMENT : VARDECL SEMICOLON
           | ATRIBSTAT SEMICOLON
@@ -155,14 +172,38 @@ STATEMENT : VARDECL SEMICOLON
           | RETURNSTAT SEMICOLON
           | IFSTAT
           | FORSTAT
-          | LCURLYBRACKETS STATELIST RCURLYBRACKETS
-          | BREAK SEMICOLON
+          | LCURLYBRACKETS STATELIST RCURLYBRACKETS {
+              //scopes.pop()
+              pop();
+          }
+          | BREAK SEMICOLON {
+              int t = top;
+              while (true) {
+                  if (scopes[t].is_loop == true) {
+                     break;
+                  }
+                  t -= 1;
+                  if (t < 0) {
+                     printf("Error: Break found outside any loop\n");
+                  }             
+              }
+          }
           | SEMICOLON;
             
-VARDECL : DATATYPE IDENT OPT_VECTOR;
-         
-OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR
-           | 
+VARDECL : DATATYPE IDENT OPT_VECTOR {
+       scope scope = peek();
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, $3);
+};
+
+//use recursive list here, in the opt vector return     
+OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR {
+              int dimension[32][32] = {{$2}, {$4}};
+              $$ = dimension;
+           }
+           | {
+              int dimension[] = {};
+              $$ = dimension;
+           }
            ;
           
 ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT;
@@ -170,8 +211,39 @@ ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT;
 ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION
             | ALLOCEXPRESSION;                  
 
-FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
-                      | MINUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
+FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+                            int right_node = $2.node;
+
+                            if ($3) {
+                                   char * result_type = check_operation($3.node, right_node, $3.operation)
+
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $3.node;
+                                   new_right_node_result.node_after = right_node;
+                                   new_right_node_result.operation = $3.operation;
+                                   new_right_node_result.result = result_type;
+                                   
+                                   right_node = new_right_node_result;
+                            }
+
+                            if ($4) {
+                                   char * result_type = check_operation($4.node, right_node, $4.operation)
+
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $4.node;
+                                   new_right_node_result.node_after = right_node;
+                                   new_right_node_result.operation = $4.operation;
+                                   new_right_node_result.result = result_type;
+                                   
+                                   right_node = new_right_node_result;
+                            }
+
+                            num_expressions[top_num_expressions] = right_node;
+                            top_num_expressions += 1;
+                      }
+                      | MINUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+
+                      }
                       | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
                       | FLOAT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
                       | STRING_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
@@ -196,9 +268,9 @@ READSTAT : READ LVALUE;
          
 RETURNSTAT : RETURN;
              
-IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE;
+IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE { pop(); };
            
-OPT_ELSE : ELSE STATEMENT
+OPT_ELSE : ELSE STATEMENT { pop(); }
          | 
          ;
             
@@ -261,3 +333,16 @@ FACTOR : INT_CONSTANT
 LVALUE : IDENT OPT_ALLOC_NUMEXP;
 
 %%
+
+char * get_var_type(char *ident) {
+    scope scope = peek();
+
+    for (int i = 0; i < top; i++) {
+       sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
+       if (symbol != NULL) {
+              return symbol.type;
+       }
+    }
+    printf("Error: Variable %s was not declared!\n", ident);
+    return NULL;
+}

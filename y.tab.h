@@ -131,13 +131,16 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "./src/parser.y"
+#line 25 "./src/parser.y"
 
   int address;
-  char *symbol;
+  char symbol[50];
   int usage_count;
+  int integer_return;
+  node node;
+  scope_and_expressions scope_and_expressions;
 
-#line 141 "y.tab.h"
+#line 144 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
