@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_SYMBOLS 1000
+#define MAX_LISTS 1000
+
+union List {
+    int value;
+    struct recursive_list * list;
+};
 
 //structing syntax symbol table
-typedef struct {
-    struct recursive_list;
+typedef struct recursive_list {
+    union List list;
 } recursive_list;
 

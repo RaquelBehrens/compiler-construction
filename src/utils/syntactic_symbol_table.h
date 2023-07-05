@@ -8,7 +8,7 @@ typedef struct {
     char symbol[32];
     char type[32];
     int usage_count;
-    int dimensions[100];
+    union List dimensions;
 } sst;
 
 sst* lookup_sst_symbol(sst *symbol_table, int num_symbols, char* symbol) {
@@ -21,7 +21,7 @@ sst* lookup_sst_symbol(sst *symbol_table, int num_symbols, char* symbol) {
     return NULL;
 }
 
-void insert_new_sst_symbol(sst *symbol_table, int num_symbols, char* symbol, char* type, int usage_count, char* dimentions []) {
+void insert_new_sst_symbol(sst *symbol_table, int num_symbols, char* symbol, char* type, int usage_count, recursive_list * dimentions) {
     sst* table_entry = lookup_sst_symbol(symbol_table, num_symbols, symbol);
     if (table_entry == NULL) {
         if (num_symbols >= MAX_SYMBOLS) {
@@ -32,7 +32,7 @@ void insert_new_sst_symbol(sst *symbol_table, int num_symbols, char* symbol, cha
         strcpy(symbol_table[num_symbols].symbol, symbol);
         strcpy(symbol_table[num_symbols].type, type);
         symbol_table[num_symbols].usage_count = usage_count;
-        memcpy(symbol_table[num_symbols].dimensions, dimentions, sizeof(int) * 100);
+        symbol_table[num_symbols].dimensions = dimentions->list;
         num_symbols++;
     } else {
         printf("Error: symbol declared two times in the same scope\n");

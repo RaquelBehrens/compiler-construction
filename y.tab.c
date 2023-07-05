@@ -71,6 +71,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "./src/utils/recursive_list.h"
 #include "./src/utils/syntactic_symbol_table.h"
 #include "./src/utils/types.h"
 #include "./src/utils/stack.h"
@@ -81,7 +82,7 @@ void yyerror(char* s);
 char * get_var_type();
 
 typedef struct scope_and_expressions {
-       char operation[32];
+       char * operation;
        char * vector;
        node node;
 } scope_and_expressions;
@@ -90,7 +91,7 @@ int top_num_expressions = -1;
 node num_expressions[10000];
 
 
-#line 94 "y.tab.c"
+#line 95 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -220,17 +221,18 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "./src/parser.y"
+#line 26 "./src/parser.y"
 
   int address;
   char symbol[50];
   int usage_count;
   int integer_return;
   float float_return;
+  struct recursive_list *recursive_list;
   struct node *node;
   struct scope_and_expressions *scope_and_expressions;
 
-#line 234 "y.tab.c"
+#line 236 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -609,15 +611,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   127,   127,   128,   129,   132,   134,   135,   138,   152,
-     158,   161,   162,   165,   166,   167,   169,   170,   171,   172,
-     173,   174,   175,   176,   180,   192,   194,   200,   204,   210,
-     212,   213,   215,   233,   252,   276,   300,   324,   325,   348,
-     350,   351,   353,   354,   357,   358,   361,   363,   365,   367,
-     369,   370,   373,   375,   377,   378,   381,   383,   384,   387,
-     389,   390,   393,   394,   395,   396,   397,   398,   400,   402,
-     403,   406,   407,   409,   411,   412,   415,   416,   417,   419,
-     420,   422,   423,   424,   425,   426,   427,   429
+       0,   129,   129,   130,   131,   134,   136,   137,   140,   154,
+     160,   163,   164,   167,   168,   169,   171,   172,   173,   174,
+     175,   176,   177,   178,   182,   194,   196,   202,   208,   214,
+     216,   217,   219,   237,   257,   281,   305,   329,   330,   353,
+     372,   396,   398,   399,   402,   403,   406,   408,   410,   412,
+     414,   415,   418,   420,   422,   423,   426,   428,   429,   432,
+     434,   435,   438,   439,   440,   441,   442,   443,   445,   447,
+     448,   451,   452,   454,   456,   457,   460,   461,   462,   464,
+     465,   467,   468,   469,   470,   471,   472,   474
 };
 #endif
 
@@ -1529,7 +1531,7 @@ yyreduce:
   switch (yyn)
     {
   case 8:
-#line 138 "./src/parser.y"
+#line 140 "./src/parser.y"
                                                                                    { 
        // Go back to upper scope
        // scopes.pop()
@@ -1539,52 +1541,52 @@ yyreduce:
        //scope scope = scopes.peek();
        scope scope = peek();
        char type[9] = "function";
-       int dimension[32];
+       recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-6].symbol), type, 1, dimension);
 }
-#line 1546 "y.tab.c"
+#line 1548 "y.tab.c"
     break;
 
   case 9:
-#line 152 "./src/parser.y"
+#line 154 "./src/parser.y"
                                         {
        // Add function declaration to this scope symbol table
        scope scope = peek();
-       int dimension[32];
+       recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-1].symbol), (yyvsp[-2].symbol), 1, dimension);
 }
-#line 1557 "y.tab.c"
+#line 1559 "y.tab.c"
     break;
 
   case 13:
-#line 165 "./src/parser.y"
+#line 167 "./src/parser.y"
                        { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1563 "y.tab.c"
+#line 1565 "y.tab.c"
     break;
 
   case 14:
-#line 166 "./src/parser.y"
+#line 168 "./src/parser.y"
                          { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1569 "y.tab.c"
+#line 1571 "y.tab.c"
     break;
 
   case 15:
-#line 167 "./src/parser.y"
+#line 169 "./src/parser.y"
                           { strcpy((yyval.symbol), (yyvsp[0].symbol)); }
-#line 1575 "y.tab.c"
+#line 1577 "y.tab.c"
     break;
 
   case 23:
-#line 176 "./src/parser.y"
+#line 178 "./src/parser.y"
                                                     {
               //scopes.pop()
               pop();
           }
-#line 1584 "y.tab.c"
+#line 1586 "y.tab.c"
     break;
 
   case 24:
-#line 180 "./src/parser.y"
+#line 182 "./src/parser.y"
                             {
               int t = top;
               while (true) {
@@ -1597,38 +1599,40 @@ yyreduce:
                   }             
               }
           }
-#line 1601 "y.tab.c"
+#line 1603 "y.tab.c"
     break;
 
   case 26:
-#line 194 "./src/parser.y"
+#line 196 "./src/parser.y"
                                     {
        scope scope = peek();
-       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-1].symbol), (yyvsp[-2].symbol), 1, (yyvsp[0].symbol));
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, (yyvsp[-1].symbol), (yyvsp[-2].symbol), 1, (yyvsp[0].recursive_list));
 }
-#line 1610 "y.tab.c"
+#line 1612 "y.tab.c"
     break;
 
   case 27:
-#line 200 "./src/parser.y"
+#line 202 "./src/parser.y"
                                                                {
-              int dimension[32][32] = {{(yyvsp[-2].integer_return)}, {(yyvsp[0].symbol)}};
-              (yyval.symbol) = dimension;
+              recursive_list * dimension;
+              dimension->list.value = (yyvsp[-2].integer_return);
+              dimension->list.list = (yyvsp[0].recursive_list);
+              (yyval.recursive_list) = dimension;
            }
-#line 1619 "y.tab.c"
+#line 1623 "y.tab.c"
     break;
 
   case 28:
-#line 204 "./src/parser.y"
+#line 208 "./src/parser.y"
              {
-              int dimension[] = {};
-              (yyval.symbol) = dimension;
+              recursive_list * dimension;
+              (yyval.recursive_list) = dimension;
            }
-#line 1628 "y.tab.c"
+#line 1632 "y.tab.c"
     break;
 
   case 32:
-#line 215 "./src/parser.y"
+#line 219 "./src/parser.y"
                                                                                           {
                             node right_node = (yyvsp[-3].scope_and_expressions)->node;
 
@@ -1647,14 +1651,15 @@ yyreduce:
                             num_expressions[top_num_expressions] = right_node;
                             top_num_expressions += 1;
                       }
-#line 1651 "y.tab.c"
+#line 1655 "y.tab.c"
     break;
 
   case 33:
-#line 233 "./src/parser.y"
+#line 237 "./src/parser.y"
                                                                                            {
                             node right_node = (yyvsp[-3].scope_and_expressions)->node;
-                            right_node.value *= -1;
+                            right_node.value.i *= -1;
+                            right_node.value.f *= -1;
 
                             if ((yyvsp[-2].scope_and_expressions) != NULL) {
                                    char * result_type = check_operation((yyvsp[-2].scope_and_expressions)->node.result, right_node.result, (yyvsp[-2].scope_and_expressions)->operation);
@@ -1671,14 +1676,14 @@ yyreduce:
                             num_expressions[top_num_expressions] = right_node;
                             top_num_expressions += 1;
                       }
-#line 1675 "y.tab.c"
+#line 1680 "y.tab.c"
     break;
 
   case 34:
-#line 252 "./src/parser.y"
+#line 257 "./src/parser.y"
                                                                                            {
                             node new_node;
-                            new_node.value = (yyvsp[-3].integer_return);
+                            new_node.value.i = (yyvsp[-3].integer_return);
                             new_node.result = "int";
 
                             if ((yyvsp[-2].scope_and_expressions) != NULL) {
@@ -1700,14 +1705,14 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1704 "y.tab.c"
+#line 1709 "y.tab.c"
     break;
 
   case 35:
-#line 276 "./src/parser.y"
+#line 281 "./src/parser.y"
                                                                                              {
                             node new_node;
-                            new_node.value = (yyvsp[-3].float_return);
+                            new_node.value.f = (yyvsp[-3].float_return);
                             new_node.result = "float";
 
                             if ((yyvsp[-2].scope_and_expressions) != NULL) {
@@ -1729,14 +1734,14 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1733 "y.tab.c"
+#line 1738 "y.tab.c"
     break;
 
   case 36:
-#line 300 "./src/parser.y"
+#line 305 "./src/parser.y"
                                                                                               {
                             node new_node;
-                            new_node.string_value = (yyvsp[-3].symbol);
+                            strcpy(new_node.value.str, (yyvsp[-3].symbol));
                             new_node.result = "string";
 
                             if ((yyvsp[-2].scope_and_expressions) != NULL) {
@@ -1758,11 +1763,11 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1762 "y.tab.c"
+#line 1767 "y.tab.c"
     break;
 
   case 38:
-#line 325 "./src/parser.y"
+#line 330 "./src/parser.y"
                                                                                                           {
                             node new_node;
                             new_node = (yyvsp[-4].scope_and_expressions)->node;
@@ -1786,23 +1791,75 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1790 "y.tab.c"
+#line 1795 "y.tab.c"
+    break;
+
+  case 39:
+#line 353 "./src/parser.y"
+                                           {
+                            node new_node;
+                            new_node.operator = (yyvsp[-1].symbol);
+                            new_node.result = get_var_type((yyvsp[-1].symbol));
+
+                            if ((yyvsp[0].scope_and_expressions) != NULL && (yyvsp[0].scope_and_expressions)->node.operator != NULL) {
+                                   new_node.operator = (yyvsp[0].scope_and_expressions)->vector;
+
+                                   char * result_type = check_operation(new_node.result, (yyvsp[0].scope_and_expressions)->node.result, (yyvsp[0].scope_and_expressions)->operation);
+                                   node new_right_node_result = {new_node.result, (yyvsp[0].scope_and_expressions)->node.result, (yyvsp[0].scope_and_expressions)->operation, result_type};
+                                   new_node = new_right_node_result;
+
+                                   num_expressions[top_num_expressions] = new_node;
+                                   top_num_expressions += 1;
+                            }
+
+
+                      }
+#line 1818 "y.tab.c"
+    break;
+
+  case 40:
+#line 372 "./src/parser.y"
+                                                                                     {
+              node new_node;
+              char * operation = "";
+
+              if ((yyvsp[-1].scope_and_expressions) != NULL) {
+                     if ((yyvsp[-2].scope_and_expressions) != NULL) {
+                            new_node = (yyvsp[-2].scope_and_expressions)->node;
+                            operation = (yyvsp[-2].scope_and_expressions)->operation;
+                     } else {
+                            new_node = (yyvsp[-1].scope_and_expressions)->node;
+                            operation = (yyvsp[-1].scope_and_expressions)->operation;
+                     }
+
+                     char * result_type = check_operation(new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation);
+                     node new_right_node_result = {new_node.result, (yyvsp[-1].scope_and_expressions)->node.result, (yyvsp[-1].scope_and_expressions)->operation, result_type};
+                     new_node = new_right_node_result;
+              }
+
+              scope_and_expressions * this_scope;
+              this_scope->node = new_node;
+              this_scope->operation = operation;
+              this_scope->vector = (yyvsp[-3].symbol);
+              (yyval.scope_and_expressions) = this_scope;
+            }
+#line 1847 "y.tab.c"
     break;
 
   case 49:
-#line 367 "./src/parser.y"
+#line 412 "./src/parser.y"
                                                         { pop(); }
-#line 1796 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 50:
-#line 369 "./src/parser.y"
+#line 414 "./src/parser.y"
                           { pop(); }
-#line 1802 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
 
-#line 1806 "y.tab.c"
+#line 1863 "y.tab.c"
 
       default: break;
     }
@@ -2034,7 +2091,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 431 "./src/parser.y"
+#line 476 "./src/parser.y"
 
 
 char * get_var_type(char *ident) {

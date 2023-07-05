@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "./src/utils/recursive_list.h"
 #include "./src/utils/syntactic_symbol_table.h"
 #include "./src/utils/types.h"
 #include "./src/utils/stack.h"
@@ -12,7 +13,7 @@ void yyerror(char* s);
 char * get_var_type();
 
 typedef struct scope_and_expressions {
-       char operation[32];
+       char * operation;
        char * vector;
        node node;
 } scope_and_expressions;
@@ -28,6 +29,7 @@ node num_expressions[10000];
   int usage_count;
   int integer_return;
   float float_return;
+  struct recursive_list *recursive_list;
   struct node *node;
   struct scope_and_expressions *scope_and_expressions;
 }
@@ -88,7 +90,7 @@ node num_expressions[10000];
 %type <symbol> PARAMLISTAUX
 %type <symbol> DATATYPE
 %type <symbol> VARDECL
-%type <symbol> OPT_VECTOR
+%type <recursive_list> OPT_VECTOR
 %type <symbol> ATRIBSTAT
 %type <symbol> ATRIBSTAT_RIGHT
 %type <scope_and_expressions> FUNCCALL_OR_EXPRESSION
@@ -104,7 +106,7 @@ node num_expressions[10000];
 %type <symbol> STATELIST
 %type <symbol> OPT_STATELIST
 %type <node> ALLOCEXPRESSION
-%type <node> OPT_ALLOC_NUMEXP
+%type <symbol> OPT_ALLOC_NUMEXP
 %type <node> EXPRESSION
 %type <node> OPT_REL_OP_NUM_EXPR
 %type <symbol> REL_OP
@@ -144,7 +146,7 @@ FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACK
        //scope scope = scopes.peek();
        scope scope = peek();
        char type[9] = "function";
-       int dimension[32];
+       recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, type, 1, dimension);
 }; 
           
@@ -152,7 +154,7 @@ FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACK
 PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
        // Add function declaration to this scope symbol table
        scope scope = peek();
-       int dimension[32];
+       recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
 }
           | 
@@ -198,11 +200,13 @@ VARDECL : DATATYPE IDENT OPT_VECTOR {
 
 //use recursive list here, in the opt vector return     
 OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR {
-              int dimension[32][32] = {{$2}, {$4}};
+              recursive_list * dimension;
+              dimension->list.value = $2;
+              dimension->list.list = $4;
               $$ = dimension;
            }
            | {
-              int dimension[] = {};
+              recursive_list * dimension;
               $$ = dimension;
            }
            ;
@@ -232,7 +236,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       }
                       | MINUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node right_node = $2->node;
-                            right_node.value *= -1;
+                            right_node.value.i *= -1;
+                            right_node.value.f *= -1;
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation($3->node.result, right_node.result, $3->operation);
@@ -251,7 +256,7 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       }
                       | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
-                            new_node.value = $1;
+                            new_node.value.i = $1;
                             new_node.result = "int";
 
                             if ($2 != NULL) {
@@ -275,7 +280,7 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       }
                       | FLOAT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
-                            new_node.value = $1;
+                            new_node.value.f = $1;
                             new_node.result = "float";
 
                             if ($2 != NULL) {
@@ -299,7 +304,7 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       }
                       | STRING_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
-                            new_node.string_value = $1;
+                            strcpy(new_node.value.str, $1);
                             new_node.result = "string";
 
                             if ($2 != NULL) {
@@ -345,9 +350,49 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-                      | IDENT FOLLOW_IDENT ;
+                      | IDENT FOLLOW_IDENT {
+                            node new_node;
+                            new_node.operator = $1;
+                            new_node.result = get_var_type($1);
 
-FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
+                            if ($2 != NULL && $2->node.operator != NULL) {
+                                   new_node.operator = $2->vector;
+
+                                   char * result_type = check_operation(new_node.result, $2->node.result, $2->operation);
+                                   node new_right_node_result = {new_node.result, $2->node.result, $2->operation, result_type};
+                                   new_node = new_right_node_result;
+
+                                   num_expressions[top_num_expressions] = new_node;
+                                   top_num_expressions += 1;
+                            }
+
+
+                      };
+
+FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
+              node new_node;
+              char * operation = "";
+
+              if ($3 != NULL) {
+                     if ($2 != NULL) {
+                            new_node = $2->node;
+                            operation = $2->operation;
+                     } else {
+                            new_node = $3->node;
+                            operation = $3->operation;
+                     }
+
+                     char * result_type = check_operation(new_node.result, $3->node.result, $3->operation);
+                     node new_right_node_result = {new_node.result, $3->node.result, $3->operation, result_type};
+                     new_node = new_right_node_result;
+              }
+
+              scope_and_expressions * this_scope;
+              this_scope->node = new_node;
+              this_scope->operation = operation;
+              this_scope->vector = $1;
+              $$ = this_scope;
+            }
             | LPAREN PARAMLISTCALL RPAREN;
       
 PARAMLISTCALL : IDENT PARAMLISTCALLAUX

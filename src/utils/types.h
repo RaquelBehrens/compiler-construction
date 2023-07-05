@@ -3,13 +3,19 @@
 
 #define TYPES_QUANTITY 19
 
+
+union Value {
+    int i;
+    float f;
+    char str[100];
+};
+
 typedef struct {
     char * node_before;
     char * node_after;
     char * operator;
     char * result;
-    float value;
-    char * string_value;
+    union Value value;
 } node;
 
 node valid_operations[TYPES_QUANTITY] = {
