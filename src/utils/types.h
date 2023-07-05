@@ -8,9 +8,9 @@ typedef struct {
     char node_after[32];
     char operator[32];
     char result[32];
-} operation;
+} node;
 
-operation valid_operations[TYPES_QUANTITY] = {
+node valid_operations[TYPES_QUANTITY] = {
     {"string", "string", "+", "string"},
     {"int", "int", "+", "int"},
     {"int", "int", "-", "int"},

@@ -1077,9 +1077,9 @@ YY_RULE_SETUP
     insert_token(IDENT, yytext);
     // Set yylval to point to the symbol table entry
     //yyval.symbol = symbol;
-    yylval.address = number_of_symbols()+1;
-    yylval.symbol = yytext;
-    yylval.usage_count = 1;
+    //yylval.address = number_of_symbols()+1;
+    strcpy(yylval.symbol, symbol->symbol);
+    //yylval.usage_count = 1;
     column += yyleng;     
     return IDENT; }
 	YY_BREAK
