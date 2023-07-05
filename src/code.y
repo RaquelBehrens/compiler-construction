@@ -121,10 +121,8 @@ PROGRAM : STATEMENT {strcpy($$, $1);
         ;
            
 FUNCLIST : FUNCDEF FUNCLISTAUX {
-                                char code[500];
-                                strcat(code, $1);
-                                strcat(code, $2);
-                                strcpy($$, code);
+                                strcat($$, $1);
+                                strcat($$, $2);
                                };
         
 FUNCLISTAUX : FUNCLIST { strcpy($$, $1); }
@@ -135,28 +133,23 @@ FUNCLISTAUX : FUNCLIST { strcpy($$, $1); }
             
 FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS {
        //char* next_label = new_label();
-       char code[500];
-       strcat(code, "goto ");
-       //strcat(code, new_label);
-       strcat(code, "\n");
-       strcat(code, $2);
-       strcat(code, " :\n");
-       strcat(code, $4);
-       strcat(code, $7);
-       strcat(code, "\n");
-       //strcat(code, next_label);
-       strcat(code, "\n");
-       strcpy($$, code);
-       puts(code);
+       strcpy($$, "goto ");
+       //strcat($$, new_label);
+       strcat($$, "\n");
+       strcat($$, $2);
+       strcat($$, " :\n");
+       strcat($$, $4);
+       strcat($$, $7);
+       strcat($$, "\n");
+       //strcat($$, next_label);
+       strcat($$, "\n");
+       puts($$);
 };
           
 PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
-                                         char code[50];
-                                         strcat(code, "param ");
-                                         strcat(code, $2);
-                                         strcat(code, ", ");
-                                         strcat(code, $3);
-                                         strcpy($$, code);   
+                                         strcpy($$, "param ");
+                                         strcat($$, $2);
+                                         strcat($$, $3); 
                                         }
           | {
              char code[1] = " ";
@@ -165,7 +158,9 @@ PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
           ;
        
 PARAMLISTAUX : COMMA PARAMLIST {
-                                strcpy($$, $2);
+                                char virgula[] = ", ";
+                                strcpy($$, virgula);
+                                strcat($$, $2);
                                }
              | {
                 char code[] = "\n";
