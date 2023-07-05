@@ -18,51 +18,92 @@ void yyerror(char* s);
 }
 
 
-%token DEF
-%token IF
-%token ELSE
-%token FOR
-%token BREAK
-%token RETURN
-%token NEW
-%token READ
-%token PRINT
-%token INT_KEYWORD
-%token FLOAT_KEYWORD
-%token STRING_KEYWORD
+%token <symbol> DEF
+%token <symbol> IF
+%token <symbol> ELSE
+%token <symbol> FOR
+%token <symbol> BREAK
+%token <symbol> RETURN
+%token <symbol> NEW
+%token <symbol> READ
+%token <symbol> PRINT
+%token <symbol> INT_KEYWORD
+%token <symbol> FLOAT_KEYWORD
+%token <symbol> STRING_KEYWORD
 
-%token RETURN_NULL
+%token <symbol> RETURN_NULL
 
-%token LCURLYBRACKETS
-%token RCURLYBRACKETS
-%token LPAREN
-%token RPAREN
-%token LSQRBRACKETS
-%token RSQRBRACKETS
+%token <symbol> LCURLYBRACKETS
+%token <symbol> RCURLYBRACKETS
+%token <symbol> LPAREN
+%token <symbol> RPAREN
+%token <symbol> LSQRBRACKETS
+%token <symbol> RSQRBRACKETS
 
-%token SEMICOLON
-%token COMMA
+%token <symbol> SEMICOLON
+%token <symbol> COMMA
 
-%left PLUS
-%left MINUS
-%left TIMES
-%left DIVIDE
-%left MOD
+%left <symbol> PLUS
+%left <symbol> MINUS
+%left <symbol> TIMES
+%left <symbol> DIVIDE
+%left <symbol> MOD
 
-%token ASSIGN
+%token <symbol> ASSIGN
 
-%token EQ
-%token NEQ
-%token GT
-%token LT
-%token GE
-%token LE
+%token <symbol> EQ
+%token <symbol> NEQ
+%token <symbol> GT
+%token <symbol> LT
+%token <symbol> GE
+%token <symbol> LE
 
-%token IDENT
+%token <symbol> IDENT 
 
-%token INT_CONSTANT
-%token FLOAT_CONSTANT
-%token STRING_CONSTANT
+%token <symbol> INT_CONSTANT
+%token <symbol> FLOAT_CONSTANT
+%token <symbol> STRING_CONSTANT
+
+%type <symbol> PROGRAM
+%type <symbol> STATEMENT
+%type <symbol> FUNCLIST
+%type <symbol> FUNCLISTAUX
+%type <symbol> FUNCDEF
+%type <symbol> PARAMLIST
+%type <symbol> PARAMLISTAUX
+%type <symbol> DATATYPE
+%type <symbol> VARDECL
+%type <symbol> OPT_VECTOR
+%type <symbol> ATRIBSTAT
+%type <symbol> ATRIBSTAT_RIGHT
+%type <symbol> FUNCCALL_OR_EXPRESSION
+%type <symbol> FOLLOW_IDENT
+%type <symbol> PARAMLISTCALL
+%type <symbol> PARAMLISTCALLAUX
+%type <symbol> PRINTSTAT
+%type <symbol> READSTAT
+%type <symbol> RETURNSTAT
+%type <symbol> IFSTAT
+%type <symbol> OPT_ELSE
+%type <symbol> FORSTAT
+%type <symbol> STATELIST
+%type <symbol> OPT_STATELIST
+%type <symbol> ALLOCEXPRESSION
+%type <symbol> OPT_ALLOC_NUMEXP
+%type <symbol> EXPRESSION
+%type <symbol> OPT_REL_OP_NUM_EXPR
+%type <symbol> REL_OP
+%type <symbol> NUMEXPRESSION
+%type <symbol> REC_PLUS_MINUS_TERM
+%type <symbol> PLUS_OR_MINUS
+%type <symbol> TERM
+%type <symbol> REC_UNARYEXPR
+%type <symbol> UNARYEXPR_OP
+%type <symbol> UNARYEXPR
+%type <symbol> FACTOR
+%type <symbol> LVALUE
+%type <symbol> ID
+
 
 
 %start PROGRAM
@@ -79,7 +120,21 @@ FUNCLISTAUX : FUNCLIST
             | 
             ;
             
-FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS;
+FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS{ 
+       // Go back to upper scope
+       // scopes.pop()
+       pop();
+
+       // Add function declaration to this scope symbol table
+       //scope scope = scopes.peek();
+       scope scope = peek();
+       char type[9] = "function";
+       int dimension[100];
+
+       char* ident = $2;
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, ident, type, 1, dimension);
+}; 
+          
           
 PARAMLIST : DATATYPE IDENT PARAMLISTAUX
           | 

@@ -592,17 +592,17 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    71,    71,    72,    73,    76,    78,    79,    82,    84,
-      85,    88,    89,    92,    93,    94,    96,    97,    98,    99,
-     100,   101,   102,   103,   104,   105,   107,   109,   110,   113,
-     115,   116,   118,   119,   120,   121,   122,   123,   124,   125,
-     127,   128,   130,   131,   134,   135,   138,   140,   142,   144,
-     146,   147,   150,   152,   154,   155,   158,   160,   161,   164,
-     166,   167,   170,   171,   172,   173,   174,   175,   177,   179,
-     180,   183,   184,   186,   188,   189,   192,   193,   194,   196,
-     197,   199,   200,   201,   202,   203,   204,   206
+       0,   112,   112,   113,   114,   117,   119,   120,   123,   139,
+     140,   143,   144,   147,   148,   149,   151,   152,   153,   154,
+     155,   156,   157,   158,   159,   160,   162,   164,   165,   168,
+     170,   171,   173,   174,   175,   176,   177,   178,   179,   180,
+     182,   183,   185,   186,   189,   190,   193,   195,   197,   199,
+     201,   202,   205,   207,   209,   210,   213,   215,   216,   219,
+     221,   222,   225,   226,   227,   228,   229,   230,   232,   234,
+     235,   238,   239,   241,   243,   244,   247,   248,   249,   251,
+     252,   254,   255,   256,   257,   258,   259,   261
 };
 #endif
 
@@ -1513,8 +1513,27 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 8:
+#line 123 "./src/parser.y"
+                                                                                   { 
+       // Go back to upper scope
+       // scopes.pop()
+       pop();
 
-#line 1518 "y.tab.c"
+       // Add function declaration to this scope symbol table
+       //scope scope = scopes.peek();
+       scope scope = peek();
+       char type[9] = "function";
+       int dimension[100];
+
+       char* ident = (yyvsp[-6].symbol);
+       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, ident, type, 1, dimension);
+}
+#line 1533 "y.tab.c"
+    break;
+
+
+#line 1537 "y.tab.c"
 
       default: break;
     }
@@ -1746,5 +1765,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 208 "./src/parser.y"
+#line 263 "./src/parser.y"
 
