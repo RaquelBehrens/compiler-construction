@@ -6,11 +6,13 @@
 #include "./src/utils/syntactic_symbol_table.h"
 #include "./src/utils/types.h"
 #include "./src/utils/stack.h"
+#include <string.h>
 
 int yylex();
 void yyerror(char* s);
 
 char * get_var_type();
+void new_scope(bool is_loop);
 
 typedef struct scope_and_expressions {
        char * operation;
@@ -33,7 +35,6 @@ node num_expressions[10000];
   struct node *node;
   struct scope_and_expressions *scope_and_expressions;
 }
-
 
 %token <symbol> DEF
 %token <symbol> IF
@@ -92,7 +93,7 @@ node num_expressions[10000];
 %type <symbol> VARDECL
 %type <recursive_list> OPT_VECTOR
 %type <symbol> ATRIBSTAT
-%type <symbol> ATRIBSTAT_RIGHT
+%type ATRIBSTAT_RIGHT
 %type <scope_and_expressions> FUNCCALL_OR_EXPRESSION
 %type <scope_and_expressions> FOLLOW_IDENT
 %type <symbol> PARAMLISTCALL
@@ -119,25 +120,27 @@ node num_expressions[10000];
 %type <symbol> UNARYEXPR
 %type <scope_and_expressions> FACTOR
 %type <scope_and_expressions> LVALUE
-%type <symbol> ID
-
 
 
 %start PROGRAM
 %%
 
-PROGRAM : STATEMENT
-        | FUNCLIST
-        | 
+PROGRAM : STATEMENT new_scope {
+              pop();
+        }
+        | FUNCLIST new_scope {
+              pop();
+        }
+        | { /*empty rule*/ }
         ;
            
 FUNCLIST : FUNCDEF FUNCLISTAUX;
         
 FUNCLISTAUX : FUNCLIST
-            | 
+            | { /*empty rule*/ }
             ;
             
-FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS{ 
+FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS new_scope { 
        // Go back to upper scope
        // scopes.pop()
        pop();
@@ -157,25 +160,25 @@ PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
        recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
 }
-          | 
+          | { /*empty rule*/ }
           ;
        
 PARAMLISTAUX : COMMA PARAMLIST
-             | 
+             | { /*empty rule*/ }
              ;
            
 DATATYPE : INT_KEYWORD { strcpy($$, $1); }
          | FLOAT_KEYWORD { strcpy($$, $1); }
          | STRING_KEYWORD { strcpy($$, $1); };
           
-STATEMENT : VARDECL SEMICOLON
-          | ATRIBSTAT SEMICOLON
+STATEMENT : VARDECL SEMICOLON 
+          | ATRIBSTAT SEMICOLON 
           | PRINTSTAT SEMICOLON
           | READSTAT SEMICOLON
           | RETURNSTAT SEMICOLON
           | IFSTAT
           | FORSTAT
-          | LCURLYBRACKETS STATELIST RCURLYBRACKETS {
+          | LCURLYBRACKETS STATELIST RCURLYBRACKETS new_scope {
               //scopes.pop()
               pop();
           }
@@ -211,7 +214,7 @@ OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR {
            }
            ;
           
-ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT;
+ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT {};
         
 ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION
             | ALLOCEXPRESSION;                  
@@ -326,7 +329,7 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
+                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {}
                       | LPAREN NUMEXPRESSION RPAREN REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
                             new_node = $2->node;
@@ -365,8 +368,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                    num_expressions[top_num_expressions] = new_node;
                                    top_num_expressions += 1;
                             }
-
-
                       };
 
 FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
@@ -393,14 +394,14 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
               this_scope->vector = $1;
               $$ = this_scope;
             }
-            | LPAREN PARAMLISTCALL RPAREN;
+            | LPAREN PARAMLISTCALL RPAREN {};
       
 PARAMLISTCALL : IDENT PARAMLISTCALLAUX
-              | 
+              | { /*empty rule*/ }
               ;
    
 PARAMLISTCALLAUX : COMMA PARAMLISTCALL
-                 | 
+                 | { /*empty rule*/ }
                  ;
           
 PRINTSTAT : PRINT EXPRESSION;
@@ -409,69 +410,230 @@ READSTAT : READ LVALUE;
          
 RETURNSTAT : RETURN;
              
-IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE { pop(); };
+IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE new_scope { pop(); };
            
-OPT_ELSE : ELSE STATEMENT { pop(); }
-         | 
+OPT_ELSE : ELSE STATEMENT new_scope { pop(); }
+         | { /*empty rule*/ }
          ;
             
-FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT;
+FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT new_loop_scope { pop(); };
 
 STATELIST : STATEMENT OPT_STATELIST;
       
 OPT_STATELIST : STATELIST
-              | 
+              | { /*empty rule*/ }
               ;
     
-ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP;
-   
-OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP
-                 | 
-                 ;
-         
-EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR;
+ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
+       num_expressions[top_num_expressions] = $4->node;
+       top_num_expressions += 1;
+};
 
-OPT_REL_OP_NUM_EXPR : REL_OP NUMEXPRESSION
-                    | 
+OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
+       char node_str[100];  // Assuming a maximum size of 100 characters for the string representation of a node
+       sprintf(node_str, "%d", $2->node.value.i);  // Convert the node to a string using the appropriate format specifier
+
+       char* temp = (char*) malloc(strlen("[") + strlen(node_str) + strlen("]") + strlen($4) + 1);
+       strcpy(temp, "[");
+       strcat(temp, node_str);
+       strcat(temp, "]");
+       strcat(temp, $4);
+
+       num_expressions[top_num_expressions] = $2->node;
+       top_num_expressions += 1;
+
+       strcpy($$, temp);
+} 
+| { strcpy($$, "");; } ;
+
+
+EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR {
+       num_expressions[top_num_expressions] = $1->node;
+       top_num_expressions += 1;
+};
+
+OPT_REL_OP_NUM_EXPR : REL_OP NUMEXPRESSION {
+       num_expressions[top_num_expressions] = $2->node;
+       top_num_expressions += 1;
+}
+                    | { /*empty rule*/ }
                     ;
-             
+
+
 REL_OP : LT
        | GT
        | LE
        | GE
        | EQ
        | NEQ;
-      
-NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM;
 
-REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM
-                    | 
+NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
+       if ($2 != NULL) {
+              char* result_type = check_operation($1->node.result, $2->node.result, $2->node.operator);
+
+              node new_node;
+              new_node.node_before = $1->node.result;
+              new_node.node_after = $2->node.result;
+              new_node.operator = $2->node.operator;
+              new_node.result = result_type;
+
+              scope_and_expressions* this_scope = malloc(sizeof(scope_and_expressions));
+              this_scope->node = new_node;
+              $$ = this_scope;
+       } else {
+              $$ = $1;
+       }
+};
+
+REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
+       if ($3) {
+              char* result_type = check_operation($2->node.result, $3->node.result, $3->operation);
+
+              node new_node;
+              new_node.node_before = $2->node.result;
+              new_node.node_after = $3->node.result;
+              new_node.operator = $3->operation;
+              new_node.result = result_type;
+
+              scope_and_expressions * this_scope;
+              this_scope->node = new_node;
+              this_scope->operation = $1->operation;
+              $$ = this_scope;
+       } else {
+              scope_and_expressions * this_scope;
+              this_scope->node = $2->node;
+              this_scope->operation = $1->operation;
+              $$ = this_scope;
+       }
+}
+                    | { $$ = NULL; }
                     ;
       
-PLUS_OR_MINUS : PLUS
-              | MINUS;
-               
-TERM : UNARYEXPR REC_UNARYEXPR;
+PLUS_OR_MINUS : PLUS {
+                     scope_and_expressions * this_scope;
+                     this_scope->operation = $1;
+                     $$ = this_scope;
+              }
+              | MINUS {
+                     scope_and_expressions * this_scope;
+                     this_scope->operation = $1;
+                     $$ = this_scope;
+              };
       
-REC_UNARYEXPR : UNARYEXPR_OP TERM
-              | 
+
+TERM : UNARYEXPR REC_UNARYEXPR {
+       node new_node2;
+       char * operation = "";
+       if ($2) {
+
+              char* result_type = check_operation($1, $2->node.result, $2->operation);
+
+              node new_node;
+              new_node.node_before = $1;
+              new_node.node_after = $2->node.result;
+              new_node.operator = $2->operation;
+              new_node.result = result_type;
+
+              scope_and_expressions * this_scope;
+              this_scope->node = new_node;
+              this_scope->operation = $2->operation;
+              $$ = this_scope;
+       } else {
+              scope_and_expressions * this_scope;
+              this_scope->operation = $1;
+              $$ = this_scope;
+       }
+};
+
+REC_UNARYEXPR : UNARYEXPR_OP TERM {
+                     scope_and_expressions * this_scope;
+                     this_scope->node = $2->node;
+                     this_scope->operation = $1->operation;
+                     $$ = this_scope;
+              }
+              | { $$ = NULL; }
               ;
-       
-UNARYEXPR_OP : TIMES
-             | DIVIDE
-             | MOD;
+
+
+UNARYEXPR_OP : TIMES {
+                     scope_and_expressions * this_scope;
+                     this_scope->operation = $1;
+                     $$ = this_scope;
+              }
+             | DIVIDE {
+                     scope_and_expressions * this_scope;
+                     this_scope->operation = $1;
+                     $$ = this_scope;
+              }
+             | MOD {
+                     scope_and_expressions * this_scope;
+                     this_scope->operation = $1;
+                     $$ = this_scope;
+              };
           
-UNARYEXPR : PLUS_OR_MINUS FACTOR
-          | FACTOR;
-             
-FACTOR : INT_CONSTANT
-       | FLOAT_CONSTANT
-       | STRING_CONSTANT
-       | RETURN_NULL
-       | LVALUE
-       | LPAREN NUMEXPRESSION RPAREN;
-             
-LVALUE : IDENT OPT_ALLOC_NUMEXP;
+UNARYEXPR : PLUS_OR_MINUS FACTOR {
+              if ($1->operation == "-") {
+                     $2->node.value.f = -1 * $2->node.value.f;
+
+                     $2->node.value.i = -1 * $2->node.value.i;
+              }    
+              strcpy($$, $2->operation);
+          }
+          | FACTOR {
+              strcpy($$, $1->operation);
+          };
+
+    
+FACTOR : INT_CONSTANT {
+              scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
+              this_scope->node.value.i = $1;
+              this_scope->node.result = "int";
+              $$ = this_scope;    
+       }
+       | FLOAT_CONSTANT {
+              scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
+              this_scope->node.value.f = $1;
+              this_scope->node.result = "float";
+              $$ = this_scope;    
+       }
+       | STRING_CONSTANT {
+              scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
+              strcpy(this_scope->node.value.str, $1);
+              this_scope->node.result = "string";
+              $$ = this_scope;    
+       }
+       | RETURN_NULL {
+              scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
+              strcpy(this_scope->node.value.str, $1);
+              this_scope->node.result = "null";
+              $$ = this_scope;    
+       }
+       | LVALUE {
+              $$ = $1;
+       }
+       | LPAREN NUMEXPRESSION RPAREN {
+              $$ = $2;
+              
+              num_expressions[top_num_expressions] = $2->node;
+              top_num_expressions += 1;
+       };
+
+LVALUE : IDENT OPT_ALLOC_NUMEXP {
+       scope_and_expressions* this_scope = malloc(sizeof(scope_and_expressions));
+       this_scope->node.operator = malloc(strlen($1) + strlen($2) + 1); // Allocate memory for concatenated string
+       strcpy(this_scope->node.operator, $1); // Copy $1 into the operator string
+       strcat(this_scope->node.operator, $2); // Concatenate $2 to the operator string
+       this_scope->node.result = get_var_type($1);
+       $$ = this_scope;   
+};
+
+new_scope : {
+       new_scope(false);
+}
+
+new_loop_scope : {
+       new_scope(true);
+}
 
 %%
 
@@ -486,4 +648,10 @@ char * get_var_type(char *ident) {
     }
     printf("Error: Variable %s was not declared!\n", ident);
     return NULL;
+}
+
+void new_scope(bool is_loop) {
+       scope scope;
+       scope.is_loop = true;
+       push(scope);
 }
