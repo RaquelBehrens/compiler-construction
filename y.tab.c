@@ -1678,6 +1678,12 @@ yyreduce:
 #line 1679 "y.tab.c"
     break;
 
+  case 29:
+#line 217 "./src/parser.y"
+                                          {}
+#line 1685 "y.tab.c"
+    break;
+
   case 32:
 #line 222 "./src/parser.y"
                                                                                           {
@@ -1698,7 +1704,7 @@ yyreduce:
                             num_expressions[top_num_expressions] = right_node;
                             top_num_expressions += 1;
                       }
-#line 1702 "y.tab.c"
+#line 1708 "y.tab.c"
     break;
 
   case 33:
@@ -1723,7 +1729,7 @@ yyreduce:
                             num_expressions[top_num_expressions] = right_node;
                             top_num_expressions += 1;
                       }
-#line 1727 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 34:
@@ -1752,7 +1758,7 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1756 "y.tab.c"
+#line 1762 "y.tab.c"
     break;
 
   case 35:
@@ -1781,7 +1787,7 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1785 "y.tab.c"
+#line 1791 "y.tab.c"
     break;
 
   case 36:
@@ -1810,7 +1816,13 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1814 "y.tab.c"
+#line 1820 "y.tab.c"
+    break;
+
+  case 37:
+#line 332 "./src/parser.y"
+                                                                                          {}
+#line 1826 "y.tab.c"
     break;
 
   case 38:
@@ -1838,7 +1850,7 @@ yyreduce:
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-#line 1842 "y.tab.c"
+#line 1854 "y.tab.c"
     break;
 
   case 39:
@@ -1859,7 +1871,7 @@ yyreduce:
                                    top_num_expressions += 1;
                             }
                       }
-#line 1863 "y.tab.c"
+#line 1875 "y.tab.c"
     break;
 
   case 40:
@@ -1888,49 +1900,55 @@ yyreduce:
               this_scope->vector = (yyvsp[-3].symbol);
               (yyval.scope_and_expressions) = this_scope;
             }
-#line 1892 "y.tab.c"
+#line 1904 "y.tab.c"
+    break;
+
+  case 41:
+#line 397 "./src/parser.y"
+                                          {}
+#line 1910 "y.tab.c"
     break;
 
   case 43:
 #line 400 "./src/parser.y"
                 { /*empty rule*/ }
-#line 1898 "y.tab.c"
+#line 1916 "y.tab.c"
     break;
 
   case 45:
 #line 404 "./src/parser.y"
                    { /*empty rule*/ }
-#line 1904 "y.tab.c"
+#line 1922 "y.tab.c"
     break;
 
   case 49:
 #line 413 "./src/parser.y"
                                                                   { pop(); }
-#line 1910 "y.tab.c"
+#line 1928 "y.tab.c"
     break;
 
   case 50:
 #line 415 "./src/parser.y"
                                     { pop(); }
-#line 1916 "y.tab.c"
+#line 1934 "y.tab.c"
     break;
 
   case 51:
 #line 416 "./src/parser.y"
            { /*empty rule*/ }
-#line 1922 "y.tab.c"
+#line 1940 "y.tab.c"
     break;
 
   case 52:
 #line 419 "./src/parser.y"
                                                                                                         { pop(); }
-#line 1928 "y.tab.c"
+#line 1946 "y.tab.c"
     break;
 
   case 55:
 #line 424 "./src/parser.y"
                 { /*empty rule*/ }
-#line 1934 "y.tab.c"
+#line 1952 "y.tab.c"
     break;
 
   case 56:
@@ -1939,7 +1957,7 @@ yyreduce:
        num_expressions[top_num_expressions] = (yyvsp[-2].scope_and_expressions)->node;
        top_num_expressions += 1;
 }
-#line 1943 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 57:
@@ -1959,13 +1977,13 @@ yyreduce:
 
        strcpy((yyval.symbol), temp);
 }
-#line 1963 "y.tab.c"
+#line 1981 "y.tab.c"
     break;
 
   case 58:
 #line 447 "./src/parser.y"
   { strcpy((yyval.symbol), "");; }
-#line 1969 "y.tab.c"
+#line 1987 "y.tab.c"
     break;
 
   case 59:
@@ -1974,7 +1992,7 @@ yyreduce:
        num_expressions[top_num_expressions] = (yyvsp[-1].scope_and_expressions)->node;
        top_num_expressions += 1;
 }
-#line 1978 "y.tab.c"
+#line 1996 "y.tab.c"
     break;
 
   case 60:
@@ -1983,13 +2001,13 @@ yyreduce:
        num_expressions[top_num_expressions] = (yyvsp[0].scope_and_expressions)->node;
        top_num_expressions += 1;
 }
-#line 1987 "y.tab.c"
+#line 2005 "y.tab.c"
     break;
 
   case 61:
 #line 459 "./src/parser.y"
                       { /*empty rule*/ }
-#line 1993 "y.tab.c"
+#line 2011 "y.tab.c"
     break;
 
   case 68:
@@ -2011,7 +2029,7 @@ yyreduce:
               (yyval.scope_and_expressions) = (yyvsp[-1].scope_and_expressions);
        }
 }
-#line 2015 "y.tab.c"
+#line 2033 "y.tab.c"
     break;
 
   case 69:
@@ -2037,13 +2055,13 @@ yyreduce:
               (yyval.scope_and_expressions) = this_scope;
        }
 }
-#line 2041 "y.tab.c"
+#line 2059 "y.tab.c"
     break;
 
   case 70:
 #line 509 "./src/parser.y"
                       { (yyval.scope_and_expressions) = NULL; }
-#line 2047 "y.tab.c"
+#line 2065 "y.tab.c"
     break;
 
   case 71:
@@ -2053,7 +2071,7 @@ yyreduce:
                      this_scope->operation = (yyvsp[0].symbol);
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2057 "y.tab.c"
+#line 2075 "y.tab.c"
     break;
 
   case 72:
@@ -2063,7 +2081,7 @@ yyreduce:
                      this_scope->operation = (yyvsp[0].symbol);
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2067 "y.tab.c"
+#line 2085 "y.tab.c"
     break;
 
   case 73:
@@ -2091,7 +2109,7 @@ yyreduce:
               (yyval.scope_and_expressions) = this_scope;
        }
 }
-#line 2095 "y.tab.c"
+#line 2113 "y.tab.c"
     break;
 
   case 74:
@@ -2102,13 +2120,13 @@ yyreduce:
                      this_scope->operation = (yyvsp[-1].scope_and_expressions)->operation;
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2106 "y.tab.c"
+#line 2124 "y.tab.c"
     break;
 
   case 75:
 #line 554 "./src/parser.y"
                 { (yyval.scope_and_expressions) = NULL; }
-#line 2112 "y.tab.c"
+#line 2130 "y.tab.c"
     break;
 
   case 76:
@@ -2118,7 +2136,7 @@ yyreduce:
                      this_scope->operation = (yyvsp[0].symbol);
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2122 "y.tab.c"
+#line 2140 "y.tab.c"
     break;
 
   case 77:
@@ -2128,7 +2146,7 @@ yyreduce:
                      this_scope->operation = (yyvsp[0].symbol);
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2132 "y.tab.c"
+#line 2150 "y.tab.c"
     break;
 
   case 78:
@@ -2138,7 +2156,7 @@ yyreduce:
                      this_scope->operation = (yyvsp[0].symbol);
                      (yyval.scope_and_expressions) = this_scope;
               }
-#line 2142 "y.tab.c"
+#line 2160 "y.tab.c"
     break;
 
   case 79:
@@ -2151,7 +2169,7 @@ yyreduce:
               }    
               strcpy((yyval.symbol), (yyvsp[0].scope_and_expressions)->operation);
           }
-#line 2155 "y.tab.c"
+#line 2173 "y.tab.c"
     break;
 
   case 80:
@@ -2159,7 +2177,7 @@ yyreduce:
                    {
               strcpy((yyval.symbol), (yyvsp[0].scope_and_expressions)->operation);
           }
-#line 2163 "y.tab.c"
+#line 2181 "y.tab.c"
     break;
 
   case 81:
@@ -2170,7 +2188,7 @@ yyreduce:
               this_scope->node.result = "int";
               (yyval.scope_and_expressions) = this_scope;    
        }
-#line 2174 "y.tab.c"
+#line 2192 "y.tab.c"
     break;
 
   case 82:
@@ -2181,7 +2199,7 @@ yyreduce:
               this_scope->node.result = "float";
               (yyval.scope_and_expressions) = this_scope;    
        }
-#line 2185 "y.tab.c"
+#line 2203 "y.tab.c"
     break;
 
   case 83:
@@ -2192,7 +2210,7 @@ yyreduce:
               this_scope->node.result = "string";
               (yyval.scope_and_expressions) = this_scope;    
        }
-#line 2196 "y.tab.c"
+#line 2214 "y.tab.c"
     break;
 
   case 84:
@@ -2203,7 +2221,7 @@ yyreduce:
               this_scope->node.result = "null";
               (yyval.scope_and_expressions) = this_scope;    
        }
-#line 2207 "y.tab.c"
+#line 2225 "y.tab.c"
     break;
 
   case 85:
@@ -2211,7 +2229,7 @@ yyreduce:
                 {
               (yyval.scope_and_expressions) = (yyvsp[0].scope_and_expressions);
        }
-#line 2215 "y.tab.c"
+#line 2233 "y.tab.c"
     break;
 
   case 86:
@@ -2222,7 +2240,7 @@ yyreduce:
               num_expressions[top_num_expressions] = (yyvsp[-1].scope_and_expressions)->node;
               top_num_expressions += 1;
        }
-#line 2226 "y.tab.c"
+#line 2244 "y.tab.c"
     break;
 
   case 87:
@@ -2235,7 +2253,7 @@ yyreduce:
        this_scope->node.result = get_var_type((yyvsp[-1].symbol));
        (yyval.scope_and_expressions) = this_scope;   
 }
-#line 2239 "y.tab.c"
+#line 2257 "y.tab.c"
     break;
 
   case 88:
@@ -2243,7 +2261,7 @@ yyreduce:
             {
        new_scope(false);
 }
-#line 2247 "y.tab.c"
+#line 2265 "y.tab.c"
     break;
 
   case 89:
@@ -2251,11 +2269,11 @@ yyreduce:
                  {
        new_scope(true);
 }
-#line 2255 "y.tab.c"
+#line 2273 "y.tab.c"
     break;
 
 
-#line 2259 "y.tab.c"
+#line 2277 "y.tab.c"
 
       default: break;
     }

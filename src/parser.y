@@ -214,7 +214,7 @@ OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR {
            }
            ;
           
-ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT;
+ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT {};
         
 ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION
             | ALLOCEXPRESSION;                  
@@ -329,7 +329,7 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR
+                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {}
                       | LPAREN NUMEXPRESSION RPAREN REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
                             new_node = $2->node;
@@ -394,7 +394,7 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
               this_scope->vector = $1;
               $$ = this_scope;
             }
-            | LPAREN PARAMLISTCALL RPAREN;
+            | LPAREN PARAMLISTCALL RPAREN {};
       
 PARAMLISTCALL : IDENT PARAMLISTCALLAUX
               | { /*empty rule*/ }
