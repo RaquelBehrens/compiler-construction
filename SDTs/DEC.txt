@@ -1,13 +1,14 @@
+Essa versão tá desatualizada!!!!
+
 VARDECL -> DATATYPE ident OPT_VECTOR (
                                             VARDECL.type = DATATYPE.type
                                             ident.type = DATATYPE.type
                                             OPT_VECTOR.her = false
                                             VARDECL.list = OPT_VECTOR.list
                             )
-DATATYPE -> int | float | string (DATATYPE.type = int.lex | float.lex | string.lex)
+DATATYPE -> int | float | string ( new node(int, lex) | new node(float, lex) | new node(string, lex))
          
-OPT_VECTOR -> [ int_constant ] OPT_VECTOR (OPT_VECTOR.her = true
-                                            OPT_VECTOR.list = [ int_constant.value ] + OPT_VECTOR.her
-                                            ) | & (OPT_VECTOR.her = false
+OPT_VECTOR -> [ int_constant ] OPT_VECTOR  (new node([, ,) new node(int_constant, lex) new node(], ,)
+                                           )| & (OPT_VECTOR.her = false
                                                    OPT_VECTOR.list = []
                                                 )
