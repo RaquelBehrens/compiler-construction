@@ -1,0 +1,12 @@
+def print_oi() {
+    string a;
+    a = "OI";
+    print a;
+    return;
+}
+
+def main() {
+    int retorno;
+
+    retorno = print_oi();
+}

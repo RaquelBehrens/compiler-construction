@@ -17,6 +17,14 @@ Lex will start analyzing it. Lex will show the symbol table and the token list, 
 
 When you are done testing files, just type 'exit' to close the application.
 
+To run the code generation, type the following command:
+
+`make code`
+
+Then to select the source file use the same comands as before.
+
+After fineshing generating it the code will be printed in the terminal.
+
 To clean all generated files, please type:
 
 `make clean`
