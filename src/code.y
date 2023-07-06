@@ -799,8 +799,8 @@ EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR {
    get_temp_var(result, unused_temps);
    unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
-   strcpy($<sem.code>$, $<sem.last_temp>2);
-   strcat($<sem.code>$, $<sem.code>1);
+   strcpy($<sem.code>$, $<sem.code>1);
+   strcpy($<sem.code>$, $<sem.code>2);
    strcat($<sem.code>$, result);
    strcat($<sem.code>$, " = ");
    strcat($<sem.code>$, $<sem.last_temp>1);
@@ -811,7 +811,7 @@ EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR {
 };
 
 OPT_REL_OP_NUM_EXPR : REL_OP NUMEXPRESSION {
-   strcpy($<sem.code>$, $<sem.last_temp>2);
+   strcpy($<sem.code>$, $<sem.code>2);
    strcpy($<sem.op>$, $1);
    strcpy($<sem.last_temp>$, $<sem.last_temp>2);
 }
@@ -835,7 +835,7 @@ NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
    get_temp_var(result, unused_temps);
    unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
-   strcpy($<sem.code>$, $<sem.last_temp>2);
+   strcpy($<sem.code>$, $<sem.code>2);
    strcat($<sem.code>$, $<sem.code>1);
    strcat($<sem.code>$, result);
    strcat($<sem.code>$, " = ");
@@ -876,6 +876,7 @@ TERM : UNARYEXPR REC_UNARYEXPR {
    unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.code>1);
+   strcat($<sem.code>$, $<sem.code>2);
    strcat($<sem.code>$, result);
    strcat($<sem.code>$, " = ");
    strcat($<sem.code>$, $<sem.last_temp>1);
@@ -944,9 +945,9 @@ FACTOR : INT_CONSTANT {
     unused_temps += 1;
     strcpy($<sem.last_temp>$, result);
     strcpy($<sem.code>$, result);
-    strcat($<sem.code>$, " = /'");
+    strcat($<sem.code>$, " = \'");
     strcat($<sem.code>$, $1);
-    strcat($<sem.code>$, "/'\n");
+    strcat($<sem.code>$, "\'\n");
 }
        | RETURN_NULL {
     char result[5];
