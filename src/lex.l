@@ -212,7 +212,7 @@ int main() {
         if (isExit != 0) {
             yyin = fopen(str,"r");
             if (yyin) {
-                //yylex();
+                yylex();
                 yyparse();
                 if(valid){
                     printf("\nSatisfies the grammar\n");
