@@ -6,10 +6,11 @@
 
 #include "./src/utils/code_utils.h"
 
-#define MAX_VAR 50
-
 int yylex();
 void yyerror(char* s);
+
+int unused_temps = 0;
+
 
 %}
 
@@ -21,7 +22,7 @@ void yyerror(char* s);
   char big_code[10000];
   struct {
       int is_funcall;
-      char op[3];
+      char op[5];
       char code[200];
       char last_temp[3];
       char var[32];
@@ -117,7 +118,6 @@ void yyerror(char* s);
 %type <sem> UNARYEXPR
 %type <sem> FACTOR
 %type <sem> LVALUE
-%type <code> ID
 
 
 
@@ -134,9 +134,9 @@ PROGRAM : STATEMENT {
                       strcpy($$, $1);
                       puts($$);
                      }      
-        | 
+        | { printf("No code!\n"); }
         ;
-           
+      
 FUNCLIST : FUNCDEF FUNCLISTAUX {
                                 strcpy($$, $1);
                                 strcat($$, $2);
@@ -252,7 +252,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     strcat(curr_left_value, $<sem.last_temp>2);
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -264,7 +265,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -276,7 +278,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>5, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>5);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -297,7 +300,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     strcat(curr_left_value, $<sem.last_temp>2);
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -309,7 +313,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -321,7 +326,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>5, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>5);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -338,14 +344,16 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     char previous_code[100] = "";
     char curr_left_value[50];
     char temp_var[5];
-    get_temp_var(curr_left_value);
+    get_temp_var(curr_left_value, unused_temps);
+    unused_temps += 1;
     strcpy(previous_code, curr_left_value);
     strcat(previous_code, " = ");
     strcat(previous_code, $1);
     strcat(previous_code, " \n");
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>2, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>2);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -357,7 +365,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -369,7 +378,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -386,14 +396,16 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     char previous_code[100] = "";
     char curr_left_value[50];
     char temp_var[5];
-    get_temp_var(curr_left_value);
+    get_temp_var(curr_left_value, unused_temps);
+    unused_temps += 1;
     strcpy(previous_code, curr_left_value);
     strcat(previous_code, " = ");
     strcat(previous_code, $1);
     strcat(previous_code, " \n");
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>2, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>2);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -405,7 +417,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -417,7 +430,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -434,14 +448,16 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     char previous_code[100] = "";
     char curr_left_value[50];
     char temp_var[5];
-    get_temp_var(curr_left_value);
+    get_temp_var(curr_left_value, unused_temps);
+    unused_temps += 1;
     strcpy(previous_code, curr_left_value);
     strcat(previous_code, " = ");
     strcat(previous_code, $1);
     strcat(previous_code, " \n");
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>2, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>2);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -453,7 +469,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -465,7 +482,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -485,7 +503,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     strcpy(curr_left_value, $1);
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>2, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>2);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -497,7 +516,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>3, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>3);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -509,7 +529,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -530,7 +551,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     strcpy(curr_left_value, $<sem.last_temp>2);
      //= f'{p[1]} {p[2]["temp_var"]}'
     if(strcmp($<sem.code>4, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>4);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -542,7 +564,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>5, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>5);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -554,7 +577,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
     }
 
     if(strcmp($<sem.code>6, " ") != 0) {
-       get_temp_var(temp_var);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat(previous_code, $<sem.code>6);
        strcat(previous_code, temp_var);
        strcat(previous_code, " = ");
@@ -570,16 +594,18 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       | IDENT FOLLOW_IDENT {
     char temp_var[5];
     if ($<sem.is_funcall>2) {
-       strcpy($<sem.code>$, $<sem.last_temp>2);
-       get_temp_var(temp_var);
+       strcpy($<sem.code>$, $<sem.code>2);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
        strcat($<sem.code>$, temp_var);
        strcat($<sem.code>$, " = call ");
        strcat($<sem.code>$, $1);
        strcat($<sem.code>$, " \n");
        strcat($<sem.last_temp>$, temp_var);
     } else if (strcmp($<sem.op>2, "0") != 0) {
-       get_temp_var(temp_var);
-       strcpy($<sem.code>$, $<sem.last_temp>2);
+       get_temp_var(temp_var, unused_temps);
+       unused_temps += 1;
+       strcpy($<sem.code>$, $<sem.code>2);
        strcat($<sem.code>$, temp_var);
        strcat($<sem.code>$, " = ");
        strcat($<sem.code>$, $<sem.op>2);
@@ -661,7 +687,7 @@ RETURNSTAT : RETURN {
        strcat($$, "\n");
 };
              
-IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE {
+IFSTAT : IF LPAREN EXPRESSION RPAREN LCURLYBRACKETS STATEMENT RCURLYBRACKETS OPT_ELSE {
    char condition[5];
    strcpy(condition, $<sem.last_temp>3);
    char next_label[10];
@@ -669,9 +695,9 @@ IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE {
    char lable_false[10];
    char jump_else[17];
    new_label(next_label);
-   if(strcmp($<opt_.code>6, "\n") != 0) {
-      strcpy(lable_false, $<opt_.label>6);
-      strcpy(jump_else, "goto ");
+   if(strcmp($<opt_.code>8, "\n") != 0) {
+      strcpy(lable_false, $<opt_.label>8);
+      strcpy(jump_else, " goto ");
       strcat(jump_else, next_label);
       strcat(jump_else, "\n");
    } else {
@@ -681,18 +707,18 @@ IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE {
    strcpy($$, $<sem.code>3);
    strcat($$, "if False ");
    strcat($$, condition);
-   strcat($$, "goto ");
+   strcat($$, " goto ");
    strcat($$, lable_false);
    strcat($$, "\n");
-   strcat($$, $5);
+   strcat($$, $6);
    strcat($$, jump_else);
-   strcat($$, $<opt_.code>6);
+   strcat($$, $<opt_.code>8);
    strcat($$, next_label);
    strcat($$, " :\n");
 
 };
            
-OPT_ELSE : ELSE LCURLYBRACKETS STATEMENT RCURLYBRACKETS {
+OPT_ELSE : ELSE LCURLYBRACKETS STATELIST RCURLYBRACKETS {
    char start_label[10];
    new_label(start_label);
    strcpy($$.label, start_label);
@@ -703,7 +729,7 @@ OPT_ELSE : ELSE LCURLYBRACKETS STATEMENT RCURLYBRACKETS {
          | { strcpy($<opt_.code>$, "\n");}
          ;
             
-FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT {
+FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS {
    char start_label[10];
    char end_lable[10];
    new_label(start_label);
@@ -718,7 +744,7 @@ FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN S
    strcat($$, "goto ");
    strcat($$, end_lable);
    strcat($$, "\n");
-   strcat($$, $9);
+   strcat($$, $10);
    strcat($$, $7);
    strcat($$, "goto ");
    strcat($$, start_label);
@@ -738,7 +764,8 @@ OPT_STATELIST : STATELIST { strcpy($$, $1); }
     
 ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
    char temp_var[5];
-   get_temp_var(temp_var);
+   get_temp_var(temp_var, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, temp_var);
    strcpy($<sem.code>$, $<sem.code>4);
    strcat($<sem.code>$, $<sem.code>6);
@@ -751,7 +778,7 @@ ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC
    strcat($<sem.code>$, $<sem.alloc>6);
    strcat($<sem.code>$, "\n");
 };
-   
+
 OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
    strcpy($<sem.code>$, $<sem.code>2);
    strcat($<sem.code>$, $<sem.code>4);
@@ -769,7 +796,8 @@ OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
          
 EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.last_temp>2);
    strcat($<sem.code>$, $<sem.code>1);
@@ -804,7 +832,8 @@ REL_OP : LT { strcpy($$, " < "); }
       
 NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.last_temp>2);
    strcat($<sem.code>$, $<sem.code>1);
@@ -818,7 +847,8 @@ NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
 
 REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.op>$, $1);
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.code>3);
@@ -842,7 +872,8 @@ PLUS_OR_MINUS : PLUS { strcpy($$, " + "); }
                
 TERM : UNARYEXPR REC_UNARYEXPR {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.code>1);
    strcat($<sem.code>$, result);
@@ -872,7 +903,8 @@ UNARYEXPR_OP : TIMES { strcpy($$, " * "); }
 
 UNARYEXPR : PLUS_OR_MINUS FACTOR {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.code>$, $<sem.code>2);
    strcat($<sem.code>$, result);
@@ -888,7 +920,8 @@ UNARYEXPR : PLUS_OR_MINUS FACTOR {
              
 FACTOR : INT_CONSTANT {
     char result[5];
-    get_temp_var(result);
+    get_temp_var(result, unused_temps);
+    unused_temps += 1;
     strcpy($<sem.last_temp>$, result);
     strcpy($<sem.code>$, result);
     strcat($<sem.code>$, " = ");
@@ -897,7 +930,8 @@ FACTOR : INT_CONSTANT {
 }
        | FLOAT_CONSTANT {
     char result[5];
-    get_temp_var(result);
+    get_temp_var(result, unused_temps);
+    unused_temps += 1;
     strcpy($<sem.last_temp>$, result);
     strcpy($<sem.code>$, result);
     strcat($<sem.code>$, " = ");
@@ -906,16 +940,18 @@ FACTOR : INT_CONSTANT {
 }
        | STRING_CONSTANT {
     char result[5];
-    get_temp_var(result);
+    get_temp_var(result, unused_temps);
+    unused_temps += 1;
     strcpy($<sem.last_temp>$, result);
     strcpy($<sem.code>$, result);
-    strcat($<sem.code>$, " = ");
+    strcat($<sem.code>$, " = /'");
     strcat($<sem.code>$, $1);
-    strcat($<sem.code>$, "\n");
+    strcat($<sem.code>$, "/'\n");
 }
        | RETURN_NULL {
     char result[5];
-    get_temp_var(result);
+    get_temp_var(result, unused_temps);
+    unused_temps += 1;
     strcpy($<sem.last_temp>$, result);
     strcpy($<sem.code>$, result);
     strcat($<sem.code>$, " = ");
@@ -930,13 +966,14 @@ FACTOR : INT_CONSTANT {
     strcat($<sem.code>$, "\n");
 }  
        | LPAREN NUMEXPRESSION RPAREN {
-         strcpy($<sem.last_temp>$, $<sem.last_temp>1);
-         strcpy($<sem.code>$, $<sem.code>1);
+         strcpy($<sem.last_temp>$, $<sem.last_temp>2);
+         strcpy($<sem.code>$, $<sem.code>2);
        };
              
 LVALUE : IDENT OPT_ALLOC_NUMEXP {
    char result[5];
-   get_temp_var(result);
+   get_temp_var(result, unused_temps);
+   unused_temps += 1;
    strcpy($<sem.last_temp>$, result);
    strcpy($<sem.var>$, $1);
    strcpy($<sem.code>$, $<sem.code>2);

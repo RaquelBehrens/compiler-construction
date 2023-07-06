@@ -143,18 +143,15 @@ null        { insert_token(RETURN_NULL, yytext);
 
 [0-9]+      { insert_token(INT_CONSTANT, yytext);
               column += yyleng;
-              printf("ue\n");
-              strcpy(yylval.symbol, symbol->symbol);
+              strcpy(yylval.symbol, yytext);
               return INT_CONSTANT; }
 [0-9]+\.[0-9]+ { insert_token(FLOAT_CONSTANT, yytext);
                  column += yyleng;
-                 printf("ue2\n");
-                 strcpy(yylval.symbol, symbol->symbol);
+                 strcpy(yylval.symbol, yytext);
                  return FLOAT_CONSTANT; }
 \"([^\\\"]|\\.)*\"  { insert_token(STRING_CONSTANT, yytext);
                       column += yyleng;
-                      printf("ue3\n");
-                      strcpy(yylval.symbol, symbol->symbol);
+                      strcpy(yylval.symbol, yytext);
                       return STRING_CONSTANT; }
 
 [\t\r]+  { /* ignore whitespace */ }
@@ -213,8 +210,6 @@ int main() {
                 yyparse();
                 if(valid){
                     printf("\nSatisfies the grammar\n");
-                    print_table();
-                    print_tokens();
                 }
             } else {
                 printf("Can not find this file!\n");
