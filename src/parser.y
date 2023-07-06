@@ -12,7 +12,7 @@ int yylex();
 void yyerror(char* s);
 
 char * get_var_type();
-void new_scope();
+void new_scope(bool is_loop);
 
 typedef struct scope_and_expressions {
        char * operation;
@@ -93,7 +93,7 @@ node num_expressions[10000];
 %type <symbol> VARDECL
 %type <recursive_list> OPT_VECTOR
 %type <symbol> ATRIBSTAT
-%type <symbol> ATRIBSTAT_RIGHT
+%type ATRIBSTAT_RIGHT
 %type <scope_and_expressions> FUNCCALL_OR_EXPRESSION
 %type <scope_and_expressions> FOLLOW_IDENT
 %type <symbol> PARAMLISTCALL
@@ -120,8 +120,6 @@ node num_expressions[10000];
 %type <symbol> UNARYEXPR
 %type <scope_and_expressions> FACTOR
 %type <scope_and_expressions> LVALUE
-%type <symbol> ID
-
 
 
 %start PROGRAM
@@ -133,13 +131,13 @@ PROGRAM : STATEMENT new_scope {
         | FUNCLIST new_scope {
               pop();
         }
-        | {}
+        | { /*empty rule*/ }
         ;
            
 FUNCLIST : FUNCDEF FUNCLISTAUX;
         
 FUNCLISTAUX : FUNCLIST
-            | 
+            | { /*empty rule*/ }
             ;
             
 FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS new_scope { 
@@ -162,11 +160,11 @@ PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
        recursive_list * dimension;
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
 }
-          | 
+          | { /*empty rule*/ }
           ;
        
 PARAMLISTAUX : COMMA PARAMLIST
-             | 
+             | { /*empty rule*/ }
              ;
            
 DATATYPE : INT_KEYWORD { strcpy($$, $1); }
@@ -370,8 +368,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                    num_expressions[top_num_expressions] = new_node;
                                    top_num_expressions += 1;
                             }
-
-
                       };
 
 FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
@@ -401,11 +397,11 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
             | LPAREN PARAMLISTCALL RPAREN;
       
 PARAMLISTCALL : IDENT PARAMLISTCALLAUX
-              | 
+              | { /*empty rule*/ }
               ;
    
 PARAMLISTCALLAUX : COMMA PARAMLISTCALL
-                 | 
+                 | { /*empty rule*/ }
                  ;
           
 PRINTSTAT : PRINT EXPRESSION;
@@ -417,15 +413,15 @@ RETURNSTAT : RETURN;
 IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE new_scope { pop(); };
            
 OPT_ELSE : ELSE STATEMENT new_scope { pop(); }
-         | 
+         | { /*empty rule*/ }
          ;
             
-FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT;
+FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT new_loop_scope { pop(); };
 
 STATELIST : STATEMENT OPT_STATELIST;
       
 OPT_STATELIST : STATELIST
-              | 
+              | { /*empty rule*/ }
               ;
     
 ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
@@ -460,7 +456,7 @@ OPT_REL_OP_NUM_EXPR : REL_OP NUMEXPRESSION {
        num_expressions[top_num_expressions] = $2->node;
        top_num_expressions += 1;
 }
-                    | 
+                    | { /*empty rule*/ }
                     ;
 
 
@@ -489,11 +485,6 @@ NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
        }
 };
 
-
-
-
-
-
 REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
        if ($3) {
               char* result_type = check_operation($2->node.result, $3->node.result, $3->operation);
@@ -517,10 +508,6 @@ REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
 }
                     | { $$ = NULL; }
                     ;
-                      
-      
-                      
-      
       
 PLUS_OR_MINUS : PLUS {
                      scope_and_expressions * this_scope;
@@ -641,7 +628,11 @@ LVALUE : IDENT OPT_ALLOC_NUMEXP {
 };
 
 new_scope : {
-       new_scope();
+       new_scope(false);
+}
+
+new_loop_scope : {
+       new_scope(true);
 }
 
 %%
@@ -659,7 +650,8 @@ char * get_var_type(char *ident) {
     return NULL;
 }
 
-void new_scope() {
-       scope new_scope;
-       push(new_scope);
+void new_scope(bool is_loop) {
+       scope scope;
+       scope.is_loop = true;
+       push(scope);
 }
