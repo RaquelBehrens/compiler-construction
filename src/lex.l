@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include "./src/utils/symbol_table.h"
 #include "./src/utils/tokens_list.h"
 #include "y.tab.h"
@@ -143,12 +144,20 @@ null        { insert_token(RETURN_NULL, yytext);
 
 [0-9]+      { insert_token(INT_CONSTANT, yytext);
               column += yyleng;
+              symbol_t* symbol = lookup_symbol(yytext);
+              int num = atoi(symbol->symbol);
+              yylval.integer_return = num;
               return INT_CONSTANT; }
 [0-9]+\.[0-9]+ { insert_token(FLOAT_CONSTANT, yytext);
                  column += yyleng;
+                 symbol_t* symbol = lookup_symbol(yytext);
+                 float num = atof(symbol->symbol);
+                 yylval.float_return = num;
                  return FLOAT_CONSTANT; }
 \"([^\\\"]|\\.)*\"  { insert_token(STRING_CONSTANT, yytext);
                       column += yyleng;
+                      symbol_t* symbol = lookup_symbol(yytext);
+                      strcpy(yylval.symbol, symbol->symbol);
                       return STRING_CONSTANT; }
 
 [\t\r]+  { /* ignore whitespace */ }

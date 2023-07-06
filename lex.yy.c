@@ -532,6 +532,7 @@ char *yytext;
 #line 1 "./src/lex.l"
 #line 2 "./src/lex.l"
 #include <stdio.h>
+#include <stdlib.h>
 #include "./src/utils/symbol_table.h"
 #include "./src/utils/tokens_list.h"
 #include "y.tab.h"
@@ -542,8 +543,8 @@ int column = 1;
 
 void print_lexical_error();
 
-#line 546 "lex.yy.c"
 #line 547 "lex.yy.c"
+#line 548 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -760,10 +761,10 @@ YY_DECL
 		}
 
 	{
-#line 18 "./src/lex.l"
+#line 19 "./src/lex.l"
 
 
-#line 767 "lex.yy.c"
+#line 768 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -832,238 +833,238 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "./src/lex.l"
+#line 21 "./src/lex.l"
 { insert_token(DEF, yytext);
               column += yyleng;
               return DEF; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "./src/lex.l"
+#line 24 "./src/lex.l"
 { insert_token(IF, yytext);
               column += yyleng;
               return IF; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "./src/lex.l"
+#line 27 "./src/lex.l"
 { insert_token(ELSE, yytext);
               column += yyleng;
               return ELSE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "./src/lex.l"
+#line 30 "./src/lex.l"
 { insert_token(FOR, yytext);
               column += yyleng;
               return FOR; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "./src/lex.l"
+#line 33 "./src/lex.l"
 { insert_token(BREAK, yytext);
               column += yyleng;
               return BREAK; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "./src/lex.l"
+#line 36 "./src/lex.l"
 { insert_token(RETURN, yytext);
               column += yyleng;
               return RETURN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "./src/lex.l"
+#line 39 "./src/lex.l"
 { insert_token(NEW, yytext);
               column += yyleng;
               return NEW; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 41 "./src/lex.l"
+#line 42 "./src/lex.l"
 { insert_token(READ, yytext);
               column += yyleng;
               return READ; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "./src/lex.l"
+#line 45 "./src/lex.l"
 { insert_token(PRINT, yytext);
               column += yyleng;
               return PRINT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "./src/lex.l"
+#line 48 "./src/lex.l"
 { insert_token(INT_KEYWORD, yytext);
               column += yyleng;
               return INT_KEYWORD; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 50 "./src/lex.l"
+#line 51 "./src/lex.l"
 { insert_token(FLOAT_KEYWORD, yytext);
               column += yyleng;
               return FLOAT_KEYWORD; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 53 "./src/lex.l"
+#line 54 "./src/lex.l"
 { insert_token(STRING_KEYWORD, yytext);
               column += yyleng;
               return STRING_KEYWORD; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 56 "./src/lex.l"
+#line 57 "./src/lex.l"
 { insert_token(RETURN_NULL, yytext);
               column += yyleng;
               return RETURN_NULL; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 60 "./src/lex.l"
+#line 61 "./src/lex.l"
 { insert_token(LCURLYBRACKETS, yytext);
               column += yyleng;
               return LCURLYBRACKETS; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 63 "./src/lex.l"
+#line 64 "./src/lex.l"
 { insert_token(RCURLYBRACKETS, yytext);
               column += yyleng;
               return RCURLYBRACKETS; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 66 "./src/lex.l"
+#line 67 "./src/lex.l"
 { insert_token(LPAREN, yytext);
               column += yyleng;
               return LPAREN; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 69 "./src/lex.l"
+#line 70 "./src/lex.l"
 { insert_token(RPAREN, yytext);
               column += yyleng;
               return RPAREN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 72 "./src/lex.l"
+#line 73 "./src/lex.l"
 { insert_token(LSQRBRACKETS, yytext);
               column += yyleng;
               return LSQRBRACKETS; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 75 "./src/lex.l"
+#line 76 "./src/lex.l"
 { insert_token(RSQRBRACKETS, yytext);
               column += yyleng;
               return RSQRBRACKETS; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 79 "./src/lex.l"
+#line 80 "./src/lex.l"
 { insert_token(SEMICOLON, yytext);
               column += yyleng;
               return SEMICOLON; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 82 "./src/lex.l"
+#line 83 "./src/lex.l"
 { insert_token(COMMA, yytext);
               column += yyleng;
               return COMMA; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 86 "./src/lex.l"
+#line 87 "./src/lex.l"
 { insert_token(PLUS, yytext);
               column += yyleng;
               return PLUS; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 89 "./src/lex.l"
+#line 90 "./src/lex.l"
 { insert_token(MINUS, yytext);
               column += yyleng;
               return MINUS; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 92 "./src/lex.l"
+#line 93 "./src/lex.l"
 { insert_token(TIMES, yytext);
               column += yyleng;
               return TIMES; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 95 "./src/lex.l"
+#line 96 "./src/lex.l"
 { insert_token(DIVIDE, yytext);
               column += yyleng;
               return DIVIDE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 98 "./src/lex.l"
+#line 99 "./src/lex.l"
 { insert_token(MOD, yytext);
               column += yyleng;
               return MOD; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 102 "./src/lex.l"
+#line 103 "./src/lex.l"
 { insert_token(ASSIGN, yytext);
               column += yyleng;
               return ASSIGN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 106 "./src/lex.l"
+#line 107 "./src/lex.l"
 { insert_token(EQ, yytext);
               column += yyleng;
               return EQ; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 109 "./src/lex.l"
+#line 110 "./src/lex.l"
 { insert_token(NEQ, yytext);
               column += yyleng;
               return NEQ; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 112 "./src/lex.l"
+#line 113 "./src/lex.l"
 { insert_token(GT, yytext);
               column += yyleng;
               return GT; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 115 "./src/lex.l"
+#line 116 "./src/lex.l"
 { insert_token(LT, yytext);
               column += yyleng;
               return LT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 118 "./src/lex.l"
+#line 119 "./src/lex.l"
 { insert_token(GE, yytext);
               column += yyleng;
               return GE; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 121 "./src/lex.l"
+#line 122 "./src/lex.l"
 { insert_token(LE, yytext);
               column += yyleng;
               return LE; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 125 "./src/lex.l"
+#line 126 "./src/lex.l"
 { 
     symbol_t* symbol = lookup_symbol(yytext);
     if (symbol == NULL) {
@@ -1085,53 +1086,61 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 144 "./src/lex.l"
+#line 145 "./src/lex.l"
 { insert_token(INT_CONSTANT, yytext);
               column += yyleng;
+              symbol_t* symbol = lookup_symbol(yytext);
+              int num = atoi(symbol->symbol);
+              yylval.integer_return = num;
               return INT_CONSTANT; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 147 "./src/lex.l"
+#line 151 "./src/lex.l"
 { insert_token(FLOAT_CONSTANT, yytext);
                  column += yyleng;
+                 symbol_t* symbol = lookup_symbol(yytext);
+                 float num = atof(symbol->symbol);
+                 yylval.float_return = num;
                  return FLOAT_CONSTANT; }
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 150 "./src/lex.l"
+#line 157 "./src/lex.l"
 { insert_token(STRING_CONSTANT, yytext);
                       column += yyleng;
+                      symbol_t* symbol = lookup_symbol(yytext);
+                      strcpy(yylval.symbol, symbol->symbol);
                       return STRING_CONSTANT; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 154 "./src/lex.l"
+#line 163 "./src/lex.l"
 { /* ignore whitespace */ }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 156 "./src/lex.l"
+#line 165 "./src/lex.l"
 { column += yyleng;}
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 158 "./src/lex.l"
+#line 167 "./src/lex.l"
 { column = 1; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 160 "./src/lex.l"
+#line 169 "./src/lex.l"
 { print_lexical_error(); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 162 "./src/lex.l"
+#line 171 "./src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1135 "lex.yy.c"
+#line 1144 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2148,7 +2157,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 162 "./src/lex.l"
+#line 171 "./src/lex.l"
 
 
 void print_lexical_error() {

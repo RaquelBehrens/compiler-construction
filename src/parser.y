@@ -11,6 +11,7 @@ int yylex();
 void yyerror(char* s);
 
 char * get_var_type();
+void new_scope();
 
 typedef struct scope_and_expressions {
        char * operation;
@@ -33,7 +34,6 @@ node num_expressions[10000];
   struct node *node;
   struct scope_and_expressions *scope_and_expressions;
 }
-
 
 %token <symbol> DEF
 %token <symbol> IF
@@ -126,9 +126,13 @@ node num_expressions[10000];
 %start PROGRAM
 %%
 
-PROGRAM : STATEMENT
-        | FUNCLIST
-        | 
+PROGRAM : STATEMENT new_scope {
+              pop();
+        }
+        | FUNCLIST new_scope {
+              pop();
+        }
+        | {}
         ;
            
 FUNCLIST : FUNCDEF FUNCLISTAUX;
@@ -137,7 +141,7 @@ FUNCLISTAUX : FUNCLIST
             | 
             ;
             
-FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS{ 
+FUNCDEF : DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS new_scope { 
        // Go back to upper scope
        // scopes.pop()
        pop();
@@ -168,14 +172,14 @@ DATATYPE : INT_KEYWORD { strcpy($$, $1); }
          | FLOAT_KEYWORD { strcpy($$, $1); }
          | STRING_KEYWORD { strcpy($$, $1); };
           
-STATEMENT : VARDECL SEMICOLON
-          | ATRIBSTAT SEMICOLON
+STATEMENT : VARDECL SEMICOLON 
+          | ATRIBSTAT SEMICOLON 
           | PRINTSTAT SEMICOLON
           | READSTAT SEMICOLON
           | RETURNSTAT SEMICOLON
           | IFSTAT
           | FORSTAT
-          | LCURLYBRACKETS STATELIST RCURLYBRACKETS {
+          | LCURLYBRACKETS STATELIST RCURLYBRACKETS new_scope {
               //scopes.pop()
               pop();
           }
@@ -409,9 +413,9 @@ READSTAT : READ LVALUE;
          
 RETURNSTAT : RETURN;
              
-IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE { pop(); };
+IFSTAT : IF LPAREN EXPRESSION RPAREN STATEMENT OPT_ELSE new_scope { pop(); };
            
-OPT_ELSE : ELSE STATEMENT { pop(); }
+OPT_ELSE : ELSE STATEMENT new_scope { pop(); }
          | 
          ;
             
@@ -473,6 +477,10 @@ FACTOR : INT_CONSTANT
              
 LVALUE : IDENT OPT_ALLOC_NUMEXP;
 
+new_scope : {
+       new_scope();
+}
+
 %%
 
 char * get_var_type(char *ident) {
@@ -486,4 +494,9 @@ char * get_var_type(char *ident) {
     }
     printf("Error: Variable %s was not declared!\n", ident);
     return NULL;
+}
+
+void new_scope() {
+       scope new_scope;
+       push(new_scope);
 }
