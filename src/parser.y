@@ -431,7 +431,7 @@ ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC
 
 OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
        char node_str[100];  // Assuming a maximum size of 100 characters for the string representation of a node
-       sprintf(node_str, "%d", $2->node);  // Convert the node to a string using the appropriate format specifier
+       sprintf(node_str, "%d", $2->node.value.i);  // Convert the node to a string using the appropriate format specifier
 
        char* temp = (char*) malloc(strlen("[") + strlen(node_str) + strlen("]") + strlen($4) + 1);
        strcpy(temp, "[");
@@ -572,7 +572,7 @@ UNARYEXPR_OP : TIMES {
               };
           
 UNARYEXPR : PLUS_OR_MINUS FACTOR {
-              if ($1->operation == '-') {
+              if ($1->operation == "-") {
                      $2->node.value.f = -1 * $2->node.value.f;
 
                      $2->node.value.i = -1 * $2->node.value.i;
@@ -586,7 +586,7 @@ UNARYEXPR : PLUS_OR_MINUS FACTOR {
     
 FACTOR : INT_CONSTANT {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = $1;
+              this_scope->node.value.i = $1;
               this_scope->node.result = "int";
               $$ = this_scope;    
        }
@@ -598,13 +598,13 @@ FACTOR : INT_CONSTANT {
        }
        | STRING_CONSTANT {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = $1;
+              strcpy(this_scope->node.value.str, $1);
               this_scope->node.result = "string";
               $$ = this_scope;    
        }
        | RETURN_NULL {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = $1;
+              strcpy(this_scope->node.value.str, $1);
               this_scope->node.result = "null";
               $$ = this_scope;    
        }

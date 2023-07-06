@@ -1946,7 +1946,7 @@ yyreduce:
 #line 432 "./src/parser.y"
                                                                             {
        char node_str[100];  // Assuming a maximum size of 100 characters for the string representation of a node
-       sprintf(node_str, "%d", (yyvsp[-2].scope_and_expressions)->node);  // Convert the node to a string using the appropriate format specifier
+       sprintf(node_str, "%d", (yyvsp[-2].scope_and_expressions)->node.value.i);  // Convert the node to a string using the appropriate format specifier
 
        char* temp = (char*) malloc(strlen("[") + strlen(node_str) + strlen("]") + strlen((yyvsp[0].symbol)) + 1);
        strcpy(temp, "[");
@@ -2144,7 +2144,7 @@ yyreduce:
   case 79:
 #line 574 "./src/parser.y"
                                  {
-              if ((yyvsp[-1].scope_and_expressions)->operation == '-') {
+              if ((yyvsp[-1].scope_and_expressions)->operation == "-") {
                      (yyvsp[0].scope_and_expressions)->node.value.f = -1 * (yyvsp[0].scope_and_expressions)->node.value.f;
 
                      (yyvsp[0].scope_and_expressions)->node.value.i = -1 * (yyvsp[0].scope_and_expressions)->node.value.i;
@@ -2166,7 +2166,7 @@ yyreduce:
 #line 587 "./src/parser.y"
                       {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = (yyvsp[0].integer_return);
+              this_scope->node.value.i = (yyvsp[0].integer_return);
               this_scope->node.result = "int";
               (yyval.scope_and_expressions) = this_scope;    
        }
@@ -2188,7 +2188,7 @@ yyreduce:
 #line 599 "./src/parser.y"
                          {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = (yyvsp[0].symbol);
+              strcpy(this_scope->node.value.str, (yyvsp[0].symbol));
               this_scope->node.result = "string";
               (yyval.scope_and_expressions) = this_scope;    
        }
@@ -2199,7 +2199,7 @@ yyreduce:
 #line 605 "./src/parser.y"
                      {
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-              this_scope->node.operator = (yyvsp[0].symbol);
+              strcpy(this_scope->node.value.str, (yyvsp[0].symbol));
               this_scope->node.result = "null";
               (yyval.scope_and_expressions) = this_scope;    
        }
