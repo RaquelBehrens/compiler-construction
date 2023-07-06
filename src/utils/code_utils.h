@@ -16,29 +16,11 @@ typedef struct opt_else {
 } opt_else;
 
 void get_temp_var(char* var) {
-    if (unused_temps) {
-        char* var = DEALLOCATED_TEMP_VARS[unused_temps - 1];
-        ALLOCATED_TEMP_VARS[MAX_VAR - unused_temps - 1];
-        unused_temps = unused_temps - 1;
-        return;
-    }else {
-        // Create a t<0~> variable name to be used
-        int i = 0;
-        while (i < MAX_VAR) {
-            strcpy(var, "t");
-            char num[2];
-            snprintf(num, 2 + 1, "%d", i);
-            strcat(var, num);
-            for(int j; j < MAX_VAR; j++) {
-                if (strcmp(var, ALLOCATED_TEMP_VARS[j]) != 0 && j>=i) {
-                    ALLOCATED_TEMP_VARS[j] = var;
-                    return;
-                }
-            }
-            i += 1;
-        }
-        printf("\nMAX TEMP VAR USED\n");
-    }
+    // Create a t<0~> variable name to be used
+    char num[3];
+    snprintf(num, 2 + 1, "%d", unused_temps);
+    strcat(var, num);
+    unused_temps += 1;
 }
 
 void free_temp_var(char* var) {
