@@ -152,7 +152,7 @@ FUNCDEF : new_scope DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST R
        scope scope = peek();
        char type[9] = "function";
        int dimension = 0;
-       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, type, 1, dimension);
+       insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, $2, type, 1, dimension);
 }; 
           
           
@@ -160,7 +160,7 @@ PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
               // Add function declaration to this scope symbol table
               scope scope = peek();
               int dimension = 0;
-              insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
+              insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, $2, $1, 1, dimension);
           }
           | {}
           ;
@@ -197,7 +197,7 @@ STATEMENT : VARDECL SEMICOLON
             
 VARDECL : DATATYPE IDENT OPT_VECTOR {
        scope scope = peek();
-       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, $3);
+       insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, $2, $1, 1, $3);
 };
 
 //use recursive list here, in the opt vector return     
@@ -738,7 +738,8 @@ new_loop_scope : { new_scope(true); }
 
 char * get_var_type(char *ident) {
     scope scope = peek();
-    sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
+
+    sst* symbol = lookup_sst_symbol(scope.symbol_table, &scope.num_symbols, ident);
     if (symbol != NULL) {
        return symbol->type;
     }
@@ -746,7 +747,7 @@ char * get_var_type(char *ident) {
     char * type = "function";
     char type1[] = "function";
     int dimension = 0;
-    insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, ident, type1, 1, dimension);
+    insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, ident, type1, 1, dimension);
     return type;
 
     printf("Error: Variable %s was not declared!\n", ident);
@@ -764,6 +765,7 @@ void show_tables() {
     int i;
     printf("Symbol Table\n");
     for (i = 0; i < top; i++) {
-        print_sst_table(all_scopes[i].symbol_table, all_scopes[i].num_symbols);
+        print_sst_table(all_scopes[i].symbol_table, &all_scopes[i].num_symbols);
     }
 }
+
