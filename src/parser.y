@@ -631,7 +631,7 @@ PLUS_OR_MINUS : PLUS {
 TERM : UNARYEXPR REC_UNARYEXPR {
        char operation[3] = " ";
        if ($2) {
-              char* result_type = check_operation($1->node.result, $2->node.result, $2->operation);
+              char* result_type = check_operation($1->node.result, $2->node.result, $2->node.operation);
               if (strcmp(result_type, "0") == 0) {
                      yyerror(" ");
                      YYABORT;
