@@ -631,7 +631,7 @@ PLUS_OR_MINUS : PLUS {
 TERM : UNARYEXPR REC_UNARYEXPR {
        char operation[3] = " ";
        if ($2) {
-              char* result_type = check_operation($1->node.result, $2->node.result, $2->operation);
+              char* result_type = check_operation($1->node.result, $2->node.result, $2->node.operation);
               if (strcmp(result_type, "0") == 0) {
                      yyerror(" ");
                      YYABORT;
@@ -738,11 +738,9 @@ new_loop_scope : { new_scope(true); }
 
 char * get_var_type(char *ident) {
     scope scope = peek();
-    for (int i = 0; i < top; i++) {
-       sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
-       if (symbol != NULL) {
-              return symbol->type;
-       }
+    sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
+    if (symbol != NULL) {
+       return symbol->type;
     }
 
     char * type = "function";
