@@ -217,6 +217,8 @@ int main() {
                     printf("\nSatisfies the grammar\n");
                     print_table();
                     print_tokens();
+                } else {
+                    break;
                 }
             } else {
                 printf("Can not find this file!\n");

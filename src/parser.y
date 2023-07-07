@@ -238,13 +238,9 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation($3->node.result, right_node.result, $3->node.operation);
-                                   if (strcmp(result.type, "0") == 0) {
-                                          char error[100] = "Error: Invalid Type Operation between ";
-                                          strcat(error,$3->node.result);
-                                          strcat(error,right_node.result);
-                                          strcat(error,$3->node.operation);
-                                          strcat(error, "!\n");
-                                          yyerror(error);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
                                    }
                                    node new_right_node_result = {$3->node.result, right_node.result, $3->node.operation, result_type};
                                    right_node = new_right_node_result;
@@ -252,6 +248,10 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($4 != NULL) {
                                    char * result_type = check_operation($4->node.result, right_node.result, $4->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {$4->node.result, right_node.result, $4->node.operation, result_type};
                                    right_node = new_right_node_result;
                             }
@@ -267,12 +267,20 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation($3->node.result, right_node.result, $3->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {$3->node.result, right_node.result, $3->node.operation, result_type};
                                    right_node = new_right_node_result;
                             }
 
                             if ($4 != NULL) {
                                    char * result_type = check_operation($4->node.result, right_node.result, $4->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {$4->node.result, right_node.result, $4->node.operation, result_type};
                                    right_node = new_right_node_result;
                             }
@@ -288,12 +296,20 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($2 != NULL) {
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation(new_node.result, $3->node.result, $3->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
@@ -313,12 +329,20 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($2 != NULL) {
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation(new_node.result, $3->node.result, $3->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
@@ -338,12 +362,20 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($2 != NULL) {
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
 
                             if ($3 != NULL) {
                                    char * result_type = check_operation(new_node.result, $3->node.result, $3->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
@@ -363,12 +395,20 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
 
                             if ($4 != NULL) {
                                    char * result_type = check_operation(new_node.result, $4->node.result, $4->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $4->node.result, $4->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
 
                             if ($5 != NULL) {
                                    char * result_type = check_operation(new_node.result, $5->node.result, $5->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $5->node.result, $5->node.operation, result_type};
                                    new_node = new_right_node_result;
                             }
@@ -390,6 +430,10 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                    strcpy(new_node.operation, $2->vector);
 
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
+                                   if (strcmp(result_type, "0") == 0) {
+                                          yyerror(" ");
+                                          YYABORT;
+                                   }
                                    node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
                                    new_node = new_right_node_result;
 
@@ -413,6 +457,10 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
                      }
 
                      char * result_type = check_operation(new_node.result, $3->node.result, $3->node.operation);
+                     if (strcmp(result_type, "0") == 0) {
+                            yyerror(" ");
+                            YYABORT;
+                     }
                      node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
                      new_node = new_right_node_result;
               }
@@ -508,7 +556,10 @@ NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
        printf("333333333333333\n");
        if ($2 != NULL) {
               char* result_type = check_operation($1->node.result, $2->node.result, $2->node.operation);
-
+              if (strcmp(result_type, "0") == 0) {
+                     yyerror(" ");
+                     YYABORT;
+              }
               node new_node;
               strcpy(new_node.node_before, $1->node.result);
               strcpy(new_node.node_after, $2->node.result);
@@ -537,6 +588,10 @@ REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
               puts($3->node.result);
               printf("1111\n");
               char* result_type = check_operation($2->node.result, $3->node.result, $3->operation);
+              if (strcmp(result_type, "0") == 0) {
+                     yyerror(" ");
+                     YYABORT;
+              }
               printf("1111\n");
               node new_node;
 
@@ -564,6 +619,7 @@ REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
 PLUS_OR_MINUS : PLUS {
        printf("5555555555555555\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
+                     printf("ueee\n");
                      strcpy(this_scope->node.operation, "+");
                      $$ = this_scope;
               }
@@ -580,7 +636,10 @@ TERM : UNARYEXPR REC_UNARYEXPR {
        if ($2) {
               puts($2->operation);
               char* result_type = check_operation($1->node.result, $2->node.result, $2->operation);
-
+              if (strcmp(result_type, "0") == 0) {
+                     yyerror(" ");
+                     YYABORT;
+              }
               node new_node;
               strcpy(new_node.node_before, $1->node.result);
               strcpy(new_node.node_after, $2->node.result);
@@ -693,11 +752,11 @@ LVALUE : IDENT OPT_ALLOC_NUMEXP {
        printf("121212121212121212\n");
        scope_and_expressions* this_scope = malloc(sizeof(scope_and_expressions));
        printf(".......................\n");
-       this_scope->node.operation = malloc(strlen($1) + strlen($2) + 1); // Allocate memory for concatenated string
+       //this_scope->node.operation = malloc(strlen($1) + strlen($2) + 1); // Allocate memory for concatenated string
        printf(".......................\n");
-       strcpy(this_scope->node.operation, $1); // Copy $1 into the operation string
+       //strcpy(this_scope->node.operation, $1); // Copy $1 into the operation string
        printf(".......................\n");
-       strcat(this_scope->node.operation, $2); // Concatenate $2 to the operation string
+       //strcat(this_scope->node.operation, $2); // Concatenate $2 to the operation string
        printf("!!!!!!!!!!!!!!!!");
        this_scope->node.result = get_var_type($1);
        printf(".......................\n");

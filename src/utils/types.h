@@ -13,7 +13,7 @@ union Value {
 typedef struct {
     char * node_before;
     char * node_after;
-    char * operation;
+    char operation[3];
     char * result;
     union Value value;
 } node;
