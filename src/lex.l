@@ -205,10 +205,10 @@ int main() {
 
     while (isExit != 0) {
         printf("Please, type the file path or exit to leave: ");
-        //scanf("%[^\n]%*c", str);
+        scanf("%[^\n]%*c", str);
 
         int isExit = strcmp(str, "exit");
-        //if (isExit != 0) {
+        if (isExit != 0) {
             yyin = fopen("./tests/test1.txt","r");
             if (yyin) {
                 //yylex();
@@ -223,9 +223,9 @@ int main() {
             } else {
                 printf("Can not find this file!\n");
             }
-        //} else {
-        //    break;
-        //}
+        } else {
+            break;
+        }
     }
     
     return 0;

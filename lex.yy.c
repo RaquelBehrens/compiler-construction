@@ -1089,9 +1089,9 @@ YY_RULE_SETUP
 #line 145 "./src/lex.l"
 { insert_token(INT_CONSTANT, yytext);
               column += yyleng;
-              symbol_t* symbol = lookup_symbol(yytext);
-              int num = atoi(symbol->symbol);
+              int num = atoi(yytext);
               yylval.integer_return = num;
+              //strcpy(yylval.symbol, yytext);
               return INT_CONSTANT; }
 	YY_BREAK
 case 36:
@@ -1099,9 +1099,9 @@ YY_RULE_SETUP
 #line 151 "./src/lex.l"
 { insert_token(FLOAT_CONSTANT, yytext);
                  column += yyleng;
-                 symbol_t* symbol = lookup_symbol(yytext);
-                 float num = atof(symbol->symbol);
+                 float num = atof(yytext);
                  yylval.float_return = num;
+                 //strcpy(yylval.symbol, yytext);
                  return FLOAT_CONSTANT; }
 	YY_BREAK
 case 37:
@@ -1110,37 +1110,36 @@ YY_RULE_SETUP
 #line 157 "./src/lex.l"
 { insert_token(STRING_CONSTANT, yytext);
                       column += yyleng;
-                      symbol_t* symbol = lookup_symbol(yytext);
-                      strcpy(yylval.symbol, symbol->symbol);
+                      strcpy(yylval.symbol, yytext);
                       return STRING_CONSTANT; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 163 "./src/lex.l"
+#line 162 "./src/lex.l"
 { /* ignore whitespace */ }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 165 "./src/lex.l"
+#line 164 "./src/lex.l"
 { column += yyleng;}
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 167 "./src/lex.l"
+#line 166 "./src/lex.l"
 { column = 1; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 169 "./src/lex.l"
+#line 168 "./src/lex.l"
 { print_lexical_error(); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 171 "./src/lex.l"
+#line 170 "./src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1144 "lex.yy.c"
+#line 1143 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2157,7 +2156,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 171 "./src/lex.l"
+#line 170 "./src/lex.l"
 
 
 void print_lexical_error() {
@@ -2200,14 +2199,16 @@ int main() {
 
         int isExit = strcmp(str, "exit");
         if (isExit != 0) {
-            yyin = fopen(str,"r");
+            yyin = fopen("./tests/test1.txt","r");
             if (yyin) {
-                yylex();
+                //yylex();
                 yyparse();
                 if(valid){
                     printf("\nSatisfies the grammar\n");
                     print_table();
                     print_tokens();
+                } else {
+                    break;
                 }
             } else {
                 printf("Can not find this file!\n");

@@ -137,21 +137,18 @@ PROGRAM : new_scope STATEMENT {
         | { show_tables(); }
         ;
            
-FUNCLIST : FUNCDEF FUNCLISTAUX {printf("aaaaaaaaaaaaaaaa\n");};
+FUNCLIST : FUNCDEF FUNCLISTAUX {};
         
-FUNCLISTAUX : FUNCLIST {printf("bbbbbbbbbbbb\n");}
-            | { printf("bbbbbbbbbbbb\n"); }
+FUNCLISTAUX : FUNCLIST {}
+            | {}
             ;
             
 FUNCDEF : new_scope DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST RCURLYBRACKETS { 
        // Go back to upper scope
        // scopes.pop()
-
-       printf("cccccccccccccc\n");
        pop();
+
        // Add function declaration to this scope symbol table
-       //scope scope = scopes.peek();
-       
        scope scope = peek();
        char type[9] = "function";
        int dimension = 0;
@@ -160,43 +157,31 @@ FUNCDEF : new_scope DEF IDENT LPAREN PARAMLIST RPAREN LCURLYBRACKETS STATELIST R
           
           
 PARAMLIST : DATATYPE IDENT PARAMLISTAUX {
-       printf("ddddddddddddd\n");
-       // Add function declaration to this scope symbol table
-       scope scope = peek();
-       printf("ddddddddddddd\n");
-       int dimension = 0;
-       insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
-       printf("ddddddddddddd\n");
-}
-          | { printf("ddddddddddddd\n"); }
+              // Add function declaration to this scope symbol table
+              scope scope = peek();
+              int dimension = 0;
+              insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, dimension);
+          }
+          | {}
           ;
        
-PARAMLISTAUX : COMMA PARAMLIST {printf("eeeeeeeeeeeeee\n");}
-             | { printf("eeeeeeeeeeeeee\n"); }
+PARAMLISTAUX : COMMA PARAMLIST {}
+             | {}
              ;
            
-DATATYPE : INT_KEYWORD { 
-       printf("ffffffffffffffff\n");
-       strcpy($$, "int"); }
-         | FLOAT_KEYWORD { printf("ffffffffffffffff\n");
-         strcpy($$, "float"); }
-         | STRING_KEYWORD { printf("ffffffffffffffff\n");
-         strcpy($$, "string"); };
+DATATYPE : INT_KEYWORD { strcpy($$, "int"); }
+         | FLOAT_KEYWORD { strcpy($$, "float"); }
+         | STRING_KEYWORD { strcpy($$, "string"); };
           
-STATEMENT : VARDECL SEMICOLON {printf("ggggggggggggggg\n");}
-          | ATRIBSTAT SEMICOLON  {printf("ggggggggggggggg\n");}
-          | PRINTSTAT SEMICOLON {printf("ggggggggggggggg\n");}
-          | READSTAT SEMICOLON {printf("ggggggggggggggg\n");}
-          | RETURNSTAT SEMICOLON {printf("ggggggggggggggg\n");}
-          | IFSTAT {printf("ggggggggggggggg\n");}
-          | FORSTAT {printf("ggggggggggggggg\n");}
-          | new_scope LCURLYBRACKETS STATELIST RCURLYBRACKETS {
-              //scopes.pop()
-              printf("ggggggggggggggg\n");
-              pop();
-          }
+STATEMENT : VARDECL SEMICOLON
+          | ATRIBSTAT SEMICOLON
+          | PRINTSTAT SEMICOLON
+          | READSTAT SEMICOLON 
+          | RETURNSTAT SEMICOLON
+          | IFSTAT
+          | FORSTAT
+          | new_scope LCURLYBRACKETS STATELIST RCURLYBRACKETS { pop(); }
           | BREAK SEMICOLON {
-              printf("ggggggggggggggg\n");
               int t = top;
               while (true) {
                   if (scopes[t].is_loop == true) {
@@ -208,32 +193,23 @@ STATEMENT : VARDECL SEMICOLON {printf("ggggggggggggggg\n");}
                   }             
               }
           }
-          | SEMICOLON {printf("ggggggggggggggg\n");};
+          | SEMICOLON {};
             
 VARDECL : DATATYPE IDENT OPT_VECTOR {
-       printf("hhhhhhhhhhhhhhhhhhhh\n");
        scope scope = peek();
        insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, $2, $1, 1, $3);
 };
 
 //use recursive list here, in the opt vector return     
-OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR {
-       printf("iiiiiiiiiiiiiiiiiiii\n");
-              $$ = $4 + 1;
-           }
-           | {
-              printf("iiiiiiiiiiiiiiiii\n");
-              $$ = 0;
-           }
-           ;
+OPT_VECTOR : LSQRBRACKETS INT_CONSTANT RSQRBRACKETS OPT_VECTOR { $$ = $4 + 1; }
+           | { $$ = 0; };
           
-ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT {printf("jjjjjjjjjjjjjjjj\n");};
+ATRIBSTAT : LVALUE ASSIGN ATRIBSTAT_RIGHT {};
         
-ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION {printf("kkkkkkkkkkkkkkkkkkkk\n");}
-            | ALLOCEXPRESSION {printf("kkkkkkkkkkkkkkkkkkkk\n");};                  
+ATRIBSTAT_RIGHT : FUNCCALL_OR_EXPRESSION {}
+            | ALLOCEXPRESSION {};                  
 
 FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-       printf("llllllllllllllll\n");
                             node right_node = $2->node;
 
                             if ($3 != NULL) {
@@ -260,7 +236,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | MINUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            printf("llllllllllllllll\n");
                             node right_node = $2->node;
                             right_node.value.i *= -1;
                             right_node.value.f *= -1;
@@ -289,7 +264,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            printf("llllllllllllllll\n");
                             node new_node;
                             new_node.value.i = $1;
                             new_node.result = "int";
@@ -322,7 +296,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | FLOAT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            printf("llllllllllllllll\n");
                             node new_node;
                             new_node.value.f = $1;
                             new_node.result = "float";
@@ -355,7 +328,6 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | STRING_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            printf("llllllllllllllll\n");
                             node new_node;
                             strcpy(new_node.value.str, $1);
                             new_node.result = "string";
@@ -387,9 +359,8 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             num_expressions[top_num_expressions] = new_node;
                             top_num_expressions += 1;
                       }
-                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {printf("llllllllllllllll\n");}
+                      | RETURN_NULL REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {}
                       | LPAREN NUMEXPRESSION RPAREN REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-                            printf("llllllllllllllll\n");
                             node new_node;
                             new_node = $2->node;
 
@@ -421,12 +392,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                             top_num_expressions += 1;
                       }
                       | IDENT FOLLOW_IDENT {
-                            printf("llllllllllllllll\n");
                             node new_node;
                             strcpy(new_node.node_before, $1);
                             new_node.result = get_var_type($1);
 
-                            if ($2 != NULL && $2->node.operation != NULL) {
+                            if ($2 != NULL && (strcpy($2->node.operation, "0") == 0)) {
                                    strcpy(new_node.operation, $2->vector);
 
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
@@ -443,17 +413,16 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       };
 
 FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
-       printf("mmmmmmmmmmmmmmm\n");
               node new_node;
               char * operation = "";
 
               if ($3 != NULL) {
                      if ($2 != NULL) {
                             new_node = $2->node;
-                            operation = $2->node.operation;
+                            strcpy(operation, $2->node.operation);
                      } else {
                             new_node = $3->node;
-                            operation = $3->node.operation;
+                            strcpy(operation, $3->node.operation);
                      }
 
                      char * result_type = check_operation(new_node.result, $3->node.result, $3->node.operation);
@@ -467,51 +436,46 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
 
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node = new_node;
-              this_scope->operation = operation;
-              this_scope->vector = $1;
+              strcpy(this_scope->node.operation, operation);
+              strcpy(this_scope->vector, $1);
               $$ = this_scope;
             }
-            | LPAREN PARAMLISTCALL RPAREN { printf("mmmmmmmmmmmmmmm\n"); };
+            | LPAREN PARAMLISTCALL RPAREN {};
       
-PARAMLISTCALL : IDENT PARAMLISTCALLAUX {printf("nnnnnnnnnnnnnnnn\n");}
-              | { printf("nnnnnnnnnnnnnn\n"); }
+PARAMLISTCALL : IDENT PARAMLISTCALLAUX {}
+              | {}
               ;
    
-PARAMLISTCALLAUX : COMMA PARAMLISTCALL {printf("ooooooooooooo\n"); }
-                 | {printf("ooooooooooooo\n"); }
+PARAMLISTCALLAUX : COMMA PARAMLISTCALL {}
+                 | {}
                  ;
           
-PRINTSTAT : PRINT EXPRESSION {printf("pppppppppppp\n"); };
+PRINTSTAT : PRINT EXPRESSION {};
            
-READSTAT : READ teste LVALUE {printf("qqqqqqqqqqqqqqq\n"); };
+READSTAT : READ LVALUE {};
          
-RETURNSTAT : RETURN {printf("rrrrrrrrrrrrrrrrr\n"); };
+RETURNSTAT : RETURN {};
              
-IFSTAT : new_scope IF LPAREN EXPRESSION RPAREN STATELIST OPT_ELSE { printf("ssssssssssssssssssss\n");
-       pop(); };
+IFSTAT : new_scope IF LPAREN EXPRESSION RPAREN STATELIST OPT_ELSE { pop(); };
            
-OPT_ELSE : new_scope ELSE STATEMENT { printf("tttttttttttt\n");
-       pop(); }
-         | { printf("tttttttttttt\n"); }
+OPT_ELSE : new_scope ELSE STATEMENT { pop(); }
+         | { }
          ;
             
-FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT new_loop_scope { printf("uuuuuuuuuuuuuu\n");
-       pop(); };
+FORSTAT : FOR LPAREN ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RPAREN STATEMENT new_loop_scope { pop(); };
 
-STATELIST : STATEMENT OPT_STATELIST { printf("vvvvvvvvvvvvvv\n");};
+STATELIST : STATEMENT OPT_STATELIST {};
       
-OPT_STATELIST : STATELIST {printf("wwwwwwwwwwwww\n");}
-              | { printf("wwwwwwwwwwww\n"); }
+OPT_STATELIST : STATELIST {}
+              | {}
               ;
     
 ALLOCEXPRESSION : NEW DATATYPE LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
-       printf("xxxxxxxxxxxx\n");
        num_expressions[top_num_expressions] = $4->node;
        top_num_expressions += 1;
 };
 
 OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
-       printf("yyyyyyyyyyyyyy\n");
        char node_str[100];  // Assuming a maximum size of 100 characters for the string representation of a node
        sprintf(node_str, "%d", $2->node.value.i);  // Convert the node to a string using the appropriate format specifier
 
@@ -526,34 +490,30 @@ OPT_ALLOC_NUMEXP : LSQRBRACKETS NUMEXPRESSION RSQRBRACKETS OPT_ALLOC_NUMEXP {
 
        strcpy($$, temp);
 } 
-| { printf("yyyyyyyyyyyyyy\n");
-       strcpy($$, "");; } ;
+| { strcpy($$, ""); } ;
 
 
 EXPRESSION : NUMEXPRESSION OPT_REL_OP_NUM_EXPR {
-       printf("zzzzzzzzzzzzz\n");
        num_expressions[top_num_expressions] = $1->node;
        top_num_expressions += 1;
 };
 
 OPT_REL_OP_NUM_EXPR : REL_OP NUMEXPRESSION {
-       printf("11111111111111111111\n");
        num_expressions[top_num_expressions] = $2->node;
        top_num_expressions += 1;
 }
-                    | { printf("11111111111111111111\n"); }
+                    | { }
                     ;
 
 
-REL_OP : LT {printf("2222222222222\n");}
-       | GT {printf("2222222222222\n");}
-       | LE {printf("2222222222222\n");}
-       | GE {printf("2222222222222\n");}
-       | EQ {printf("2222222222222\n");}
-       | NEQ {printf("2222222222222\n");};
+REL_OP : LT {}
+       | GT {}
+       | LE {}
+       | GE {}
+       | EQ {}
+       | NEQ {};
 
 NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
-       printf("333333333333333\n");
        if ($2 != NULL) {
               char* result_type = check_operation($1->node.result, $2->node.result, $2->node.operation);
               if (strcmp(result_type, "0") == 0) {
@@ -569,62 +529,42 @@ NUMEXPRESSION : TERM REC_PLUS_MINUS_TERM {
               scope_and_expressions* this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node = new_node;
               $$ = this_scope;
-       } else {
-              printf("3333333333333333\n");
-              $$ = $1;
-       }
+       } else { $$ = $1; }
 };
 
 REC_PLUS_MINUS_TERM : PLUS_OR_MINUS TERM REC_PLUS_MINUS_TERM {
-       printf("44444444444444444\n");
-       printf("00000\n");
        if ($3) {
-              printf("7\n");
-              node dsa = $3->node;
-              printf("6\n");
-              char * assa = dsa.result;
-              printf("8\n");
-              printf("%s\n", assa);
-              puts($3->node.result);
-              printf("1111\n");
-              char* result_type = check_operation($2->node.result, $3->node.result, $3->operation);
+              char* result_type = check_operation($2->node.result, $3->node.result, $3->node.operation);
               if (strcmp(result_type, "0") == 0) {
                      yyerror(" ");
                      YYABORT;
               }
-              printf("1111\n");
               node new_node;
 
               strcpy(new_node.node_before, $2->node.result);
               strcpy(new_node.node_after, $3->node.result);
               strcpy(new_node.operation, $3->node.operation);
               strcpy(new_node.result, result_type);
-              printf("1111\n");
+
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node = new_node;
               strcpy(this_scope->node.operation, $1->node.operation);
               $$ = this_scope;
        } else {
-              printf("2222\n");
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node = $2->node;
               strcpy(this_scope->node.operation, $1->node.operation);
               $$ = this_scope;
        }
 }
-                    | { printf("ueuueueueueue\n");
-                     $$ = NULL; }
-                    ;
+                    | { $$ = NULL; };
       
 PLUS_OR_MINUS : PLUS {
-       printf("5555555555555555\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
-                     printf("ueee\n");
                      strcpy(this_scope->node.operation, "+");
                      $$ = this_scope;
               }
               | MINUS {
-                     printf("55555555555555\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
                      strcpy(this_scope->node.operation, "-");
                      $$ = this_scope;
@@ -634,7 +574,6 @@ PLUS_OR_MINUS : PLUS {
 TERM : UNARYEXPR REC_UNARYEXPR {
        char operation[3] = " ";
        if ($2) {
-              puts($2->operation);
               char* result_type = check_operation($1->node.result, $2->node.result, $2->operation);
               if (strcmp(result_type, "0") == 0) {
                      yyerror(" ");
@@ -656,38 +595,32 @@ TERM : UNARYEXPR REC_UNARYEXPR {
 };
 
 REC_UNARYEXPR : UNARYEXPR_OP TERM {
-       printf("777777777777777\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
                      this_scope->node = $2->node;
                      strcpy(this_scope->operation, $1->node.operation);
                      $$ = this_scope;
               }
-              | { printf("77777777777777777\n");
-                     $$ = NULL; }
+              | { $$ = NULL; }
               ;
 
 
 UNARYEXPR_OP : TIMES {
-       printf("8888888888888\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
                      strcpy(this_scope->node.operation, "*");
                      $$ = this_scope;
               }
              | DIVIDE {
-              printf("8888888888888\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
                      strcpy(this_scope->node.operation, "/");
                      $$ = this_scope;
               }
              | MOD {
-              printf("8888888888888\n");
                      scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
                      strcpy(this_scope->node.operation, "%");
                      $$ = this_scope;
               };
           
 UNARYEXPR : PLUS_OR_MINUS FACTOR {
-       printf("999999999999\n");
               if (strcmp($1->node.operation, "-")) {
                      if (strcmp($2->node.result, "int") == 0) {
                             $2->node.value.i = -1 * $2->node.value.i;
@@ -695,113 +628,74 @@ UNARYEXPR : PLUS_OR_MINUS FACTOR {
                             $2->node.value.f = -1 * $2->node.value.f;
                      }
               }    
-              //strcpy($$, $2->operation);
-              //scope_and_expressions * teste = malloc(sizeof(scope_and_expressions));
-              //teste = $2;
               $$ = $2;
           }
-          | FACTOR {
-              printf("999999999999\n");
-              printf("999999999999\n");
-
-              $$ = $1;
-          };
+          | FACTOR { $$ = $1; };
 
     
 FACTOR : INT_CONSTANT {
-       printf("10100101010100101\n");
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node.value.i = $1;
               strcpy(this_scope->node.result,"int");
               $$ = this_scope;    
        }
        | FLOAT_CONSTANT {
-              printf("10100101010100101\n");
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               this_scope->node.value.f = $1;
               strcpy(this_scope->node.result,"float");
               $$ = this_scope;    
        }
        | STRING_CONSTANT {
-              printf("10100101010100101\n");
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               strcpy(this_scope->node.value.str, $1);
               strcpy(this_scope->node.result,"string");
               $$ = this_scope;    
        }
        | RETURN_NULL {
-              printf("10100101010100101\n");
               scope_and_expressions * this_scope = malloc(sizeof(scope_and_expressions));
               strcpy(this_scope->node.value.str, $1);
               strcpy(this_scope->node.result,"null");
               $$ = this_scope;    
        }
-       | LVALUE {
-              printf("10100101010100101\n");
-              $$ = $1;
-       }
+       | LVALUE { $$ = $1; }
        | LPAREN NUMEXPRESSION RPAREN {
-              printf("10100101010100101\n");
               $$ = $2;
-              
               num_expressions[top_num_expressions] = $2->node;
               top_num_expressions += 1;
        };
 
 LVALUE : IDENT OPT_ALLOC_NUMEXP {
-       printf("121212121212121212\n");
        scope_and_expressions* this_scope = malloc(sizeof(scope_and_expressions));
-       printf(".......................\n");
        //this_scope->node.operation = malloc(strlen($1) + strlen($2) + 1); // Allocate memory for concatenated string
-       printf(".......................\n");
        //strcpy(this_scope->node.operation, $1); // Copy $1 into the operation string
-       printf(".......................\n");
        //strcat(this_scope->node.operation, $2); // Concatenate $2 to the operation string
-       printf("!!!!!!!!!!!!!!!!");
        this_scope->node.result = get_var_type($1);
-       printf(".......................\n");
        $$ = this_scope;
-       printf(".......................\n");
 };
 
-new_scope : {
+new_scope : { new_scope(false); }
 
-       printf("113131313131313131\n");
-       new_scope(false);
-}
-
-new_loop_scope : {
-       printf("1414141414141414\n");
-       new_scope(true);
-}
-
-teste : {
-       printf("dasjiodjsaiojdoisae");
-}
+new_loop_scope : { new_scope(true); }
 
 %%
 
 char * get_var_type(char *ident) {
-       printf("!!!!!!!!!!!!!!!!");
     scope scope = peek();
-printf("!!!!!!!!!!!!!!!!");
     for (int i = 0; i < top; i++) {
        sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
        if (symbol != NULL) {
               return symbol->type;
        }
     }
-    printf("!!!!!!!!!!!!!!!!");
-    
+
     char * type = "function";
     char type1[] = "function";
     int dimension = 0;
     insert_new_sst_symbol(scope.symbol_table, scope.num_symbols, ident, type1, 1, dimension);
     return type;
 
-   // printf("Error: Variable %s was not declared!\n", ident);
-    //return NULL;
-
+    printf("Error: Variable %s was not declared!\n", ident);
+    return NULL;
 }
 
 void new_scope(bool is_loop) {

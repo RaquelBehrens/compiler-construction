@@ -13,7 +13,6 @@ typedef struct {
 
 sst* lookup_sst_symbol(sst *symbol_table, int num_symbols, char* symbol) {
     int i;
-    printf("%s\n", symbol);
     sst * teste = symbol_table;
     for (i = 0; i < num_symbols; i++) {
         if (strcmp(symbol_table[i].symbol, symbol) == 0) {
