@@ -218,7 +218,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {$3->node.result, right_node.result, $3->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $3->node.result;
+                                   new_right_node_result.node_after = right_node.result;
+                                   strcpy(new_right_node_result.operation, $3->node.operation);
+                                   new_right_node_result.result = result_type;
                                    right_node = new_right_node_result;
                             }
 
@@ -228,7 +232,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {$4->node.result, right_node.result, $4->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $4->node.result;
+                                   new_right_node_result.node_after = right_node.result;
+                                   strcpy(new_right_node_result.operation, $4->node.operation);
+                                   new_right_node_result.result = result_type;
                                    right_node = new_right_node_result;
                             }
 
@@ -246,7 +254,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {$3->node.result, right_node.result, $3->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $3->node.result;
+                                   new_right_node_result.node_after = right_node.result;
+                                   strcpy(new_right_node_result.operation, $3->node.operation);
+                                   new_right_node_result.result = result_type;
                                    right_node = new_right_node_result;
                             }
 
@@ -256,7 +268,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {$4->node.result, right_node.result, $4->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = $4->node.result;
+                                   new_right_node_result.node_after = right_node.result;
+                                   strcpy(new_right_node_result.operation, $4->node.operation);
+                                   new_right_node_result.result = result_type;
                                    right_node = new_right_node_result;
                             }
 
@@ -265,8 +281,9 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                       }
                       | INT_CONSTANT REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_EXPR {
                             node new_node;
+                            char int_s[]= "int";
                             new_node.value.i = $1;
-                            new_node.result = "int";
+                            new_node.result = int_s;
 
                             if ($2 != NULL) {
                                    char * result_type = check_operation(new_node.result, $2->node.result, $2->node.operation);
@@ -274,7 +291,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $2->node.result;
+                                   strcpy(new_right_node_result.operation, $2->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -284,7 +305,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $3->node.result;
+                                   strcpy(new_right_node_result.operation, $3->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -306,7 +331,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $2->node.result;
+                                   strcpy(new_right_node_result.operation, $2->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -316,7 +345,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $3->node.result;
+                                   strcpy(new_right_node_result.operation, $3->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -338,7 +371,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $2->node.result;
+                                   strcpy(new_right_node_result.operation, $2->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -348,7 +385,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $3->node.result;
+                                   strcpy(new_right_node_result.operation, $3->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -370,7 +411,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $4->node.result, $4->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $4->node.result;
+                                   strcpy(new_right_node_result.operation, $4->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -380,7 +425,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $5->node.result, $5->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $5->node.result;
+                                   strcpy(new_right_node_result.operation, $5->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
                             }
 
@@ -404,7 +453,11 @@ FUNCCALL_OR_EXPRESSION: PLUS FACTOR REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP
                                           yyerror(" ");
                                           YYABORT;
                                    }
-                                   node new_right_node_result = {new_node.result, $2->node.result, $2->node.operation, result_type};
+                                   node new_right_node_result;
+                                   new_right_node_result.node_before = new_node.result;
+                                   new_right_node_result.node_after = $2->node.result;
+                                   strcpy(new_right_node_result.operation, $2->node.operation);
+                                   new_right_node_result.result = result_type;
                                    new_node = new_right_node_result;
 
                                    num_expressions[top_num_expressions] = new_node;
@@ -430,7 +483,11 @@ FOLLOW_IDENT: OPT_ALLOC_NUMEXP REC_UNARYEXPR REC_PLUS_MINUS_TERM OPT_REL_OP_NUM_
                             yyerror(" ");
                             YYABORT;
                      }
-                     node new_right_node_result = {new_node.result, $3->node.result, $3->node.operation, result_type};
+                     node new_right_node_result;
+                     new_right_node_result.node_before = new_node.result;
+                     new_right_node_result.node_after = $3->node.result;
+                     strcpy(new_right_node_result.operation, $3->node.operation);
+                     new_right_node_result.result = result_type;
                      new_node = new_right_node_result;
               }
 
