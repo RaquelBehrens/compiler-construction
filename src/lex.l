@@ -144,20 +144,19 @@ null        { insert_token(RETURN_NULL, yytext);
 
 [0-9]+      { insert_token(INT_CONSTANT, yytext);
               column += yyleng;
-              symbol_t* symbol = lookup_symbol(yytext);
-              int num = atoi(symbol->symbol);
+              int num = atoi(yytext);
               yylval.integer_return = num;
+              //strcpy(yylval.symbol, yytext);
               return INT_CONSTANT; }
 [0-9]+\.[0-9]+ { insert_token(FLOAT_CONSTANT, yytext);
                  column += yyleng;
-                 symbol_t* symbol = lookup_symbol(yytext);
-                 float num = atof(symbol->symbol);
+                 float num = atof(yytext);
                  yylval.float_return = num;
+                 //strcpy(yylval.symbol, yytext);
                  return FLOAT_CONSTANT; }
 \"([^\\\"]|\\.)*\"  { insert_token(STRING_CONSTANT, yytext);
                       column += yyleng;
-                      symbol_t* symbol = lookup_symbol(yytext);
-                      strcpy(yylval.symbol, symbol->symbol);
+                      strcpy(yylval.symbol, yytext);
                       return STRING_CONSTANT; }
 
 [\t\r]+  { /* ignore whitespace */ }
@@ -206,13 +205,13 @@ int main() {
 
     while (isExit != 0) {
         printf("Please, type the file path or exit to leave: ");
-        scanf("%[^\n]%*c", str);
+        //scanf("%[^\n]%*c", str);
 
         int isExit = strcmp(str, "exit");
-        if (isExit != 0) {
-            yyin = fopen(str,"r");
+        //if (isExit != 0) {
+            yyin = fopen("./tests/test1.txt","r");
             if (yyin) {
-                yylex();
+                //yylex();
                 yyparse();
                 if(valid){
                     printf("\nSatisfies the grammar\n");
@@ -222,9 +221,9 @@ int main() {
             } else {
                 printf("Can not find this file!\n");
             }
-        } else {
-            break;
-        }
+        //} else {
+        //    break;
+        //}
     }
     
     return 0;

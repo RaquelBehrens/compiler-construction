@@ -13,7 +13,7 @@ union Value {
 typedef struct {
     char * node_before;
     char * node_after;
-    char * operator;
+    char * operation;
     char * result;
     union Value value;
 } node;
@@ -30,26 +30,24 @@ node valid_operations[TYPES_QUANTITY] = {
     {"float", "float", "*", "float"},
     {"float", "float", "%", "float"},
     {"float", "float", "/", "float"},
-    {"float", "int", "+", "float"},
-    {"float", "int", "-", "float"},
-    {"float", "int", "*", "float"},
-    {"float", "int", "/", "float"},
-    {"int", "float", "+", "float"},
-    {"int", "float", "-", "float"},
-    {"int", "float", "*", "float"},
-    {"int", "float", "/", "float"},
 };
 
-char * check_operation(char* node_before, char* node_after, char* operator) {
-    for (int i = 0; i < TYPES_QUANTITY; i++) {
-        if ((strcmp(valid_operations[i].node_before, node_before) == 0) &&
-            (strcmp(valid_operations[i].node_after, node_after) == 0) &&
-            (strcmp(valid_operations[i].operator, operator) == 0) 
-            ) {
-            return valid_operations[i].result;
+char * check_operation(char* node_before, char* node_after, char* operation) {
+    printf("1\n");
+    printf("%s\n", node_before);
+    if (strcmp(node_before, node_after) == 0) {
+        printf("1\n");
+        if (strcmp(node_before, "string") == 0) {
+            printf("1\n");
+            if (strcmp(operation, "+") != 0) {
+                printf("Operator between strings is not +");
+            }
+            return node_before;
         }
-    }
 
-    printf("Error: Invalid Type Operation between %s %s %s!\n", node_before, operator, node_after);
-    return NULL;
+    }
+    printf("1\n");
+    printf("Error: Invalid Type Operation between %s %s %s!\n", node_before, operation, node_after);
+    
+    return "0";
 }
