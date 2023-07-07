@@ -744,11 +744,11 @@ char * get_var_type(char *ident) {
        return symbol->type;
     }
 
-    char * type = "function";
-    char type1[] = "function";
-    int dimension = 0;
-    insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, ident, type1, 1, dimension);
-    return type;
+    //char * type = "function";
+    //char type1[] = "function";
+    //int dimension = 0;
+    //insert_new_sst_symbol(scope.symbol_table, &scope.num_symbols, ident, type1, 1, dimension);
+    //return type;
 
     printf("Error: Variable %s was not declared!\n", ident);
     return NULL;
@@ -757,6 +757,7 @@ char * get_var_type(char *ident) {
 void new_scope(bool is_loop) {
        scope scope;
        scope.is_loop = true;
+       scope.num_symbols = 0;
        push(scope);
        push_all_scopes(scope);
 }
