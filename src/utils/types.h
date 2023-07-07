@@ -18,7 +18,9 @@ typedef struct {
     union Value value;
 } node;
 
+/*
 node valid_operations[TYPES_QUANTITY] = {
+    {elemento esquerda, elemento direita, operador, resultado}
     {"string", "string", "+", "string"},
     {"int", "int", "+", "int"},
     {"int", "int", "-", "int"},
@@ -31,6 +33,7 @@ node valid_operations[TYPES_QUANTITY] = {
     {"float", "float", "%", "float"},
     {"float", "float", "/", "float"},
 };
+*/
 
 char * check_operation(char* node_before, char* node_after, char* operation) {
     if (strcmp(node_before, node_after) == 0) {

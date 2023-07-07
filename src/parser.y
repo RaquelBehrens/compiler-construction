@@ -738,11 +738,9 @@ new_loop_scope : { new_scope(true); }
 
 char * get_var_type(char *ident) {
     scope scope = peek();
-    for (int i = 0; i < top; i++) {
-       sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
-       if (symbol != NULL) {
-              return symbol->type;
-       }
+    sst* symbol = lookup_sst_symbol(scope.symbol_table, scope.num_symbols, ident);
+    if (symbol != NULL) {
+       return symbol->type;
     }
 
     char * type = "function";
